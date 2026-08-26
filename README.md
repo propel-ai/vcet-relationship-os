@@ -18,6 +18,30 @@ Open the deployed URL. The prototype starts on **Monday 8:00 AM**.
 | Close a window | <kbd>Esc</kbd> or the red light |
 | Start over | "Reset" in the controller |
 
+## Running it across three laptops
+
+Everyone opens their own copy and clicks freely in it; you drive the clock.
+
+1. On **your** machine, open the controller and hit **Start a synced session**.
+2. Copy **Nicole's link** and **Dave's link** and send them out. Each link opens
+   the prototype already set to that person.
+3. Advance the timeline as normal. Their screens follow within about a second.
+
+The status dot tells you where you stand — green *Live*, amber *Connecting*,
+red *Connection lost*. If someone reloads or drifts, **Re-send this moment to
+everyone** puts the room back in step without moving the story. Late joiners
+catch up to the current beat on their own.
+
+**Only the clock syncs.** Persona, which window is open, and every interaction —
+routing an email, recording a memo, drafting an intro — stay local to each
+person. That is deliberate: the point is watching each of them act in their own
+copy, not mirroring one screen.
+
+Sync rides [ntfy.sh](https://ntfy.sh), a free public pub/sub — no account, no
+API key, nothing secret in this repo. The room id is random and unguessable.
+Skip step 1 and the prototype runs perfectly well on one machine with no
+network at all.
+
 ## The story
 
 | beat | when | what lands |
@@ -47,6 +71,7 @@ prototype only mimics the recording.
 index.html            the desktop shell
 assets/world.js       personas, timeline beats, state, event bus, notifications
 assets/desktop.js     menu bar, dock, window frame, hidden controller
+assets/sync.js        cross-machine clock sync for multi-laptop sessions
 assets/app-*.js       one module per app
 data/*.js             all seeded content, gated by beat
 web/                  the Sam web surfaces (Warm Match, Pulse, Ask Sam)

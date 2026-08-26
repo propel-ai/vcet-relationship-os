@@ -346,3 +346,24 @@ html, body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ------------------------------------------------------- session sync (controller) */
+.ctl-sync { border-top: 1px solid rgba(255,255,255,.08); margin-top: 4px; padding-top: 11px; }
+.sy-status { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; font-size: 11.5px; color: rgba(255,255,255,.62); }
+.sy-status i { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; background: rgba(255,255,255,.28); }
+.sy-status i.sy-live { background: #3FCF7F; box-shadow: 0 0 0 3px rgba(63,207,127,.18); }
+.sy-status i.sy-connecting { background: #E8B84B; animation: syPulse 1.1s ease-in-out infinite; }
+.sy-status i.sy-error { background: #FF6B5A; }
+@keyframes syPulse { 50% { opacity: .3; } }
+.sy-hint { margin: 7px 0 0; font-size: 11px; line-height: 1.45; color: rgba(255,255,255,.38); }
+.sy-links { display: flex; gap: 5px; margin-bottom: 6px; }
+.sy-copy {
+  flex: 1 1 0; cursor: pointer; border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.05); color: rgba(255,255,255,.72);
+  border-radius: 7px; padding: 7px 6px; font-family: var(--body); font-size: 11.5px;
+  transition: background .15s, color .15s;
+}
+.sy-copy:hover { background: rgba(255,255,255,.12); color: #fff; }
+.sy-copy.ok { background: var(--green); border-color: var(--green); color: #fff; }
+.ctl-reset.ok { background: var(--green); border-color: var(--green); color: #fff; }
+.ctl-sync .ctl-reset { margin-bottom: 5px; }
