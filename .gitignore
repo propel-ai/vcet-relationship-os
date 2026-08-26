@@ -1,2 +1,7 @@
 .DS_Store
 node_modules/
+
+# Internal source material — design references, client screenshots, meeting
+# artifacts. Kept locally for the build; deliberately NOT published to the
+# public Pages repo.
+ref/
