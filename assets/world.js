@@ -222,6 +222,7 @@ window.VCET_APPS = window.VCET_APPS || {};
             app: 'slack',
             title: 'Slack',
             from: m.author,
+            channel: m.channel,
             body: (ch && ch.kind === 'dm' ? '' : '#' + (ch ? ch.name : m.channel) + '  ') + (m.notify || stripTags(m.text)).slice(0, 90)
           });
         }
@@ -256,7 +257,13 @@ window.VCET_APPS = window.VCET_APPS || {};
         '<span class="notif-app">' + esc(APP_META[n.app].name) + '</span></span>' +
         '<span class="notif-text">' + esc(n.body || '') + '</span>' +
       '</span>';
-    el.addEventListener('click', () => { World.openWindow(n.app); dismiss(el); });
+    el.addEventListener('click', () => {
+      // Land on the exact thing the notification is about, not just the app.
+      if (n.channel) World.setFlag('slack:goto', n.channel);
+      if (n.mail) World.setFlag('mail:goto', n.mail);
+      World.openWindow(n.app);
+      dismiss(el);
+    });
     stack.appendChild(el);
     requestAnimationFrame(() => el.classList.add('in'));
     setTimeout(() => dismiss(el), 7200);

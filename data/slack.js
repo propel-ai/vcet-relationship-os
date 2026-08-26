@@ -253,8 +253,8 @@ window.VCET_DATA.slack = {
       author: 'Sam', authorId: 'sam', app: true, day: 'Tue', time: '11:05 AM',
       notify: '60 seconds on Yuki Tanaka · Maple Grid Energy?',
       blocks: [
-        { t: 'section', text: '@dave — 60 seconds on *Yuki Tanaka · Maple Grid Energy*, while it is still fresh?' },
-        { t: 'context', items: [{ src: 'PORTFOLIO CHECK-IN', text: '10:00–10:47a · third session this quarter · @nicole also attended' }] },
+        { t: 'section', text: '@me — 60 seconds on *Yuki Tanaka · Maple Grid Energy*, while it is still fresh?' },
+        { t: 'context', items: [{ src: 'PORTFOLIO CHECK-IN', text: '10:00–10:47a · third session this quarter · @them also attended' }] },
         { t: 'section', small: true, text: 'Check-ins get four questions:' },
         { t: 'numbers', rows: [
           ['Rating', 'How did it actually go, 1–5?'],

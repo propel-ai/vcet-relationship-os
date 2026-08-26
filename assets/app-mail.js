@@ -529,11 +529,20 @@
         (it.n ? '<span class="gm-nav-n">' + it.n + '</span>' : '') +
       '</button>';
     }
+    var qual = 0, rev = 0;
+    for (var q = 0; q < list.length; q++) {
+      if (!list[q].tag) continue;
+      if (list[q].tag.tone === 'green') qual++; else rev++;
+    }
+    var labels = W.personaId === 'nicole'
+      ? [['Sam · qualified', qual], ['Sam · needs review', rev], ['Campaigns', 0], ['Events + partners', 0]]
+      : [['Portfolio', 0], ['LPs + board', 0], ['Founder pipeline', 0], ['Sam · flagged', 3]];
     h += '<div style="height:14px"></div>';
-    h += '<button type="button" class="gm-nav" data-act="noop">' + I.tag + '<span>Sam · qualified</span><span class="gm-nav-n">3</span></button>';
-    h += '<button type="button" class="gm-nav" data-act="noop">' + I.label + '<span>Sam · needs review</span><span class="gm-nav-n">2</span></button>';
-    h += '<button type="button" class="gm-nav" data-act="noop">' + I.label + '<span>Portfolio</span></button>';
-    h += '<button type="button" class="gm-nav" data-act="noop">' + I.label + '<span>LPs + board</span></button>';
+    for (var L = 0; L < labels.length; L++) {
+      h += '<button type="button" class="gm-nav" data-act="noop">' + (L === 0 ? I.tag : I.label) +
+        '<span>' + labels[L][0] + '</span>' +
+        (labels[L][1] ? '<span class="gm-nav-n">' + labels[L][1] + '</span>' : '') + '</button>';
+    }
     els.nav.innerHTML = h;
   }
 

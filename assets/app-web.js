@@ -423,6 +423,29 @@
     return p.tab || p.title;
   }
 
+  /* Arriving from Slack, Warm Match should already be holding the need Sam
+     found — being handed a blank box and told to retype it breaks the illusion
+     that the two surfaces are one product. The embedded apps are React, so a
+     plain `.value =` is swallowed; go through the native setter and fire the
+     event React actually listens for. Same-origin, so this is allowed. */
+  function prefill(frame, text) {
+    var tries = 0;
+    (function attempt() {
+      var doc, input, setter;
+      try { doc = frame.contentDocument; } catch (e) { return; }
+      input = doc && doc.querySelector('input[type="text"], input:not([type])');
+      if (!input) {
+        if (++tries < 40) return setTimeout(attempt, 100);
+        return;
+      }
+      setter = Object.getOwnPropertyDescriptor(
+        frame.contentWindow.HTMLInputElement.prototype, 'value'
+      ).set;
+      setter.call(input, text);
+      input.dispatchEvent(new frame.contentWindow.Event('input', { bubbles: true }));
+    })();
+  }
+
   /* =========================================================== panes */
   function buildPane(t) {
     var p = PAGES()[t.page] || PAGES().home;
@@ -434,6 +457,7 @@
       var f = document.createElement('iframe');
       f.src = p.src;
       f.title = p.title;
+      if (p.prefill) f.addEventListener('load', function () { prefill(f, p.prefill); });
       pane.appendChild(f);
     } else {
       var doc = document.createElement('div');

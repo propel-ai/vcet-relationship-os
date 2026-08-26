@@ -20,7 +20,10 @@ window.VCET_DATA.web = {
       title: 'Warm Match',
       tab: 'Sam · Warm Match',
       fav: 'sam',
-      src: 'web/warm-match.html'
+      src: 'web/warm-match.html',
+      // The need Sam surfaced from the Yuki download, so the handoff from
+      // #network-needs arrives already searched rather than blank.
+      prefill: 'Hardware founder needs supply chain intros, Vermont'
     },
     pulse: {
       id: 'pulse',

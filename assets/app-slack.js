@@ -94,6 +94,11 @@
     s = s.replace(/`([^`]+)`/g, '<code class="sl-code">$1</code>');
     s = s.replace(/\*([^*]+)\*/g, '<b>$1</b>');
     s = s.replace(/_([^_]+)_/g, '<i>$1</i>');
+    /* @me / @them resolve against whoever we are observing, so Sam always asks
+       the person in the room rather than hard-coding one of them. */
+    s = s.replace(/@(me|them)\b/g, function (_, k) {
+      return '@' + (k === 'me' ? W.personaId : W.other.id);
+    });
     s = s.replace(/@(nicole|dave|ema|javen|sam)\b/g, function (_, k) {
       return '<span class="sl-mention">@' + esc(who(k).short) + '</span>';
     });
@@ -150,6 +155,11 @@
   function render() {
     if (!mounted || !root) return;
     seed();
+
+    // A notification click asks us to open a specific channel.
+    var goto = W.flags && W.flags['slack:goto'];
+    if (goto) { W.setFlag('slack:goto', null); if (chanById(goto)) current = goto; }
+
     // fall back to a channel that exists
     if (!chanById(current)) current = 'dm-sam';
     markRead(current);
@@ -375,7 +385,7 @@
 
       case 'context':
         return '<div class="sl-b-context">' + b.items.map(function (it) {
-          return '<span class="sl-src">' + esc(it.src) + '</span><span class="sl-ctxt">' + esc(it.text) + '</span>';
+          return '<span class="sl-src">' + esc(it.src) + '</span><span class="sl-ctxt">' + md(it.text) + '</span>';
         }).join('') + '</div>';
 
       case 'list':
@@ -500,7 +510,7 @@
     }
 
     if (vm === 'listening' || vm === 'done') {
-      var dur = fmt(vmSeconds > 4 ? vmSeconds : 47);
+      var dur = '0:47';   // the demo clip is always the same length
       h += '<div class="sl-msg">' +
         '<span class="sl-av" style="background:' + a.color + '">' + esc(a.initials) + '</span>' +
         '<div class="sl-body">' +
@@ -541,7 +551,7 @@
                 ['Later', 'Ask about the Northeast Grid cohort decision in *3 weeks*']
               ],
               foot: '1 network need detected · 1 commitment closed out · filed to HubSpot' },
-            { t: 'context', items: [{ src: 'TRANSCRIPT 0:47', text: 'confidence high · 2 names matched · nothing sent anywhere' }] },
+            { t: 'context', items: [{ src: vmText ? 'TYPED 11:06A' : 'TRANSCRIPT 0:47', text: 'confidence high · 2 names matched · nothing sent anywhere' }] },
             { t: 'actions', buttons: [
               { label: 'Looks right', style: 'primary', action: 'flag', id: 'dlok' },
               { label: 'Fix something', action: 'noop' } ] }
@@ -1024,7 +1034,10 @@
       'tue-1230pm': 'network-needs',
       'tue-5pm': 'portfolio-company-news'
     }[b.id];
-    if (jump && W.openApp !== 'slack') current = jump;
+    /* Always follow the story. Advancing a beat is the facilitator saying "this
+       just happened" — leaving the viewer parked on a stale channel reads as a
+       broken product, not as respecting their focus. */
+    if (jump) { current = jump; if (W.openApp === 'slack') render(); }
     if (b.id === 'tue-12pm') { vm = 'idle'; vmText = ''; }
   });
 })();
