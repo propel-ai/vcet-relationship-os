@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCET · Relationship OS</title>
+<link rel="icon" href="assets/vcet-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/desktop.css">
+</head>
+<body>
+
+<div id="desktop">
+  <header id="menubar"></header>
+
+  <main id="window-layer" class="empty">
+    <div class="desktop-hint">
+      <img src="assets/vcet-logo.png" alt="VCET" class="dh-logo">
+      <p class="dh-line">Everything you need is in the dock.</p>
+    </div>
+  </main>
+
+  <nav id="dock" aria-label="Applications"></nav>
+
+  <div id="notif-stack" aria-live="polite"></div>
+
+  <aside id="controller" aria-hidden="true" aria-label="Prototype controller"></aside>
+</div>
+
+<script src="assets/world.js"></script>
+<script src="data/contacts.js"></script>
+<script src="data/mail.js"></script>
+<script src="data/slack.js"></script>
+<script src="data/calendar.js"></script>
+<script src="data/web.js"></script>
+<script src="assets/app-mail.js"></script>
+<script src="assets/app-slack.js"></script>
+<script src="assets/app-calendar.js"></script>
+<script src="assets/app-web.js"></script>
+<script src="assets/desktop.js"></script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VCET Digital Brain — Prototype Architecture v0.1 · Propel Labs</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=space-grotesk@400,500,600,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-primary:#23233A; --bg-secondary:#2D2D87; --bg-tertiary:#3B54F7;
+    --bg-elevated:#2A2A42; --bg-hover:#32325A;
+    --text-primary:#FFFFFF; --text-secondary:#B8B8D8; --text-tertiary:#8888A8;
+    --accent:#3B54F7; --accent-light:#788AFF; --accent-pale:#CAD1FF;
+    --success:#51EE7B; --warning:#F9FF86; --error:#FF6B6B;
+    --radius-sm:4px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg-primary);color:var(--text-primary);font-family:'Satoshi',sans-serif;font-size:15px;line-height:1.55;}
+  h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif;font-weight:600;}
+  .mono{font-family:'Space Mono',monospace;}
+  .wrap{max-width:1080px;margin:0 auto;padding:48px 32px;}
+  .eyebrow{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-light);margin-bottom:12px;}
+  section{margin-bottom:64px;}
+  .section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;border-bottom:1px solid var(--bg-hover);padding-bottom:12px;}
+  .section-num{font-family:'Space Mono',monospace;color:var(--accent-light);font-size:14px;}
+  .section-head h2{font-size:26px;}
+  p.lead{font-size:17px;color:var(--text-secondary);max-width:820px;}
+  .card{background:var(--bg-elevated);border-radius:var(--radius-lg);padding:20px;}
+  .card.outlined{background:transparent;border:1px solid var(--bg-hover);}
+  .tag{display:inline-block;font-family:'Space Mono',monospace;font-size:11px;padding:3px 9px;border-radius:var(--radius-full,9999px);border:1px solid var(--bg-hover);color:var(--text-secondary);border-radius:9999px;}
+  .tag.blue{background:rgba(59,84,247,.18);border-color:rgba(120,138,255,.45);color:var(--accent-pale);}
+  .tag.green{background:rgba(81,238,123,.12);border-color:rgba(81,238,123,.4);color:var(--success);}
+  .tag.amber{background:rgba(249,255,134,.1);border-color:rgba(249,255,134,.35);color:var(--warning);}
+  .tag.red{background:rgba(255,107,107,.1);border-color:rgba(255,107,107,.4);color:var(--error);}
+  .quote{border-left:3px solid var(--accent);padding:10px 16px;background:var(--bg-elevated);border-radius:0 var(--radius-md) var(--radius-md) 0;color:var(--text-secondary);font-style:italic;font-size:14px;}
+  .quote .who{display:block;font-style:normal;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-tertiary);margin-top:6px;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th{font-family:'Space Grotesk',sans-serif;font-weight:600;text-align:left;color:var(--accent-pale);padding:10px 12px;border-bottom:1px solid var(--bg-hover);font-size:13px;letter-spacing:.02em;}
+  td{padding:10px 12px;border-bottom:1px solid rgba(50,50,90,.5);color:var(--text-secondary);vertical-align:top;}
+  td.rank{font-family:'Space Mono',monospace;color:var(--accent-light);}
+  td strong{color:var(--text-primary);font-weight:500;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  @media(max-width:820px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+  /* Hero */
+  .hero{padding:56px 0 40px;border-bottom:1px solid var(--bg-hover);margin-bottom:56px;}
+  .hero .logo{width:150px;margin-bottom:36px;}
+  .hero h1{font-size:42px;line-height:1.12;max-width:760px;}
+  .hero h1 .thin{color:var(--accent-light);}
+  .hero .meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px;}
+  .hero .sub{margin-top:20px;font-size:17px;color:var(--text-secondary);max-width:780px;}
+
+  /* Bet strip */
+  .bet{background:linear-gradient(120deg,rgba(59,84,247,.22),rgba(45,45,135,.28));border:1px solid rgba(120,138,255,.35);border-radius:var(--radius-xl);padding:26px 28px;margin-bottom:64px;}
+  .bet h3{font-size:20px;margin-bottom:10px;color:#fff;}
+  .bet p{color:var(--text-secondary);font-size:15.5px;max-width:900px;}
+  .bet .figures{display:flex;flex-wrap:wrap;gap:32px;margin-top:20px;}
+  .bet .fig .n{font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;color:var(--accent-light);}
+  .bet .fig .l{font-size:12px;color:var(--text-tertiary);font-family:'Space Mono',monospace;letter-spacing:.06em;text-transform:uppercase;}
+
+  /* Principles */
+  .principles{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+  .principles .p{font-family:'Space Grotesk',sans-serif;font-size:13.5px;background:var(--bg-elevated);border:1px solid var(--bg-hover);border-radius:9999px;padding:8px 16px;color:var(--text-secondary);}
+
+  /* Loop timeline */
+  .loop{position:relative;margin-top:24px;}
+  .loop-item{display:grid;grid-template-columns:96px 1fr;gap:18px;padding:14px 0;border-bottom:1px dashed var(--bg-hover);}
+  .loop-item:last-child{border-bottom:none;}
+  .loop-item .t{font-family:'Space Mono',monospace;color:var(--accent-light);font-size:13px;padding-top:2px;}
+  .loop-item h4{font-size:15.5px;margin-bottom:3px;}
+  .loop-item p{color:var(--text-secondary);font-size:14px;}
+  .loop-item .cov{margin-top:6px;}
+
+  /* Surfaces */
+  .surface{position:relative;overflow:hidden;}
+  .surface .s-num{position:absolute;top:14px;right:18px;font-family:'Space Mono',monospace;font-size:34px;color:rgba(120,138,255,.22);font-weight:700;}
+  .surface h3{font-size:19px;margin-bottom:4px;}
+  .surface .s-tag{font-family:'Space Mono',monospace;font-size:11px;color:var(--accent-light);letter-spacing:.1em;text-transform:uppercase;}
+  .surface ul{margin:12px 0 0 0;list-style:none;}
+  .surface li{padding:6px 0 6px 20px;position:relative;color:var(--text-secondary);font-size:14px;}
+  .surface li:before{content:"→";position:absolute;left:0;color:var(--accent);}
+
+  /* Architecture stack */
+  .stack{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+  .layer{display:grid;grid-template-columns:190px 1fr;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--bg-hover);}
+  .layer .l-name{padding:18px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15px;display:flex;flex-direction:column;justify-content:center;gap:4px;}
+  .layer .l-name .l-sub{font-family:'Space Mono',monospace;font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.75;}
+  .layer .l-body{padding:16px 18px;background:var(--bg-elevated);}
+  .layer .l-body p{color:var(--text-secondary);font-size:13.5px;}
+  .layer .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .chip{font-family:'Space Mono',monospace;font-size:11px;background:var(--bg-primary);border:1px solid var(--bg-hover);border-radius:var(--radius-sm);padding:4px 9px;color:var(--text-secondary);}
+  .chip.hot{border-color:rgba(120,138,255,.5);color:var(--accent-pale);}
+  .l4 .l-name{background:#3B54F7;color:#fff;}
+  .l3 .l-name{background:#32409F;color:#fff;}
+  .l2 .l-name{background:#2D2D87;color:#fff;}
+  .l1 .l-name{background:#2A2A55;color:var(--accent-pale);}
+  .flow-arrow{text-align:center;color:var(--text-tertiary);font-size:12px;font-family:'Space Mono',monospace;letter-spacing:.12em;}
+
+  /* Matrix */
+  .matrix td:first-child{color:var(--text-primary);font-weight:500;}
+
+  /* Timeline */
+  .tl{margin-top:20px;}
+  .tl-row{display:grid;grid-template-columns:150px 90px 1fr;gap:16px;padding:13px 0;border-bottom:1px solid rgba(50,50,90,.5);}
+  .tl-row .d{font-family:'Space Mono',monospace;color:var(--accent-light);font-size:13px;}
+  .tl-row .o{font-family:'Space Mono',monospace;font-size:12px;color:var(--warning);}
+  .tl-row .w{color:var(--text-secondary);font-size:14px;}
+  .tl-row .w strong{color:var(--text-primary);font-weight:500;}
+
+  /* Decisions */
+  .decision{display:grid;grid-template-columns:34px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid rgba(50,50,90,.5);}
+  .decision .n{font-family:'Space Mono',monospace;color:var(--accent-light);font-size:15px;padding-top:2px;}
+  .decision h4{font-size:15.5px;margin-bottom:4px;}
+  .decision p{color:var(--text-secondary);font-size:14px;}
+  .decision .rec{margin-top:6px;font-size:13.5px;}
+  .decision .rec b{color:var(--success);font-weight:600;}
+
+  footer{border-top:1px solid var(--bg-hover);padding-top:24px;color:var(--text-tertiary);font-size:12.5px;font-family:'Space Mono',monospace;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <svg class="logo" viewBox="0 0 1106 263" fill="none" xmlns="http://www.w3.org/2000/svg"><g><path d="M89.342 107.245H15.2907C7.75333 107.245 1.64648 113.351 1.64648 120.887V207.862C1.64648 208.816 2.43099 209.6 3.3847 209.585C53.8085 208.754 95.3719 171.457 102.817 122.918C104.078 114.674 97.6793 107.245 89.342 107.245Z" fill="#788AFF"/><path d="M3.36908 -0.554007C2.41537 -0.569387 1.63086 0.214997 1.63086 1.16856V88.1431C1.63086 95.6794 7.7377 101.785 15.2751 101.785H89.3264C97.6637 101.785 104.063 94.3567 102.801 86.1129C95.3409 37.5733 53.7928 0.291899 3.36908 -0.554007Z" fill="#788AFF"/><path d="M139.965 107.245H116.753C109.231 107.245 103.14 113.336 103.14 120.857V193.036C103.14 194.358 104.601 195.189 105.724 194.512C130.813 179.117 148.764 153.216 153.425 122.948C154.702 114.705 148.303 107.261 139.965 107.261V107.245Z" fill="#788AFF"/><path d="M105.724 14.5185C104.601 13.8264 103.14 14.6723 103.14 15.995V88.1739C103.14 95.6948 109.231 101.785 116.753 101.785H139.919C148.287 101.785 154.702 94.3259 153.425 86.0514C148.749 55.7834 130.813 29.914 105.724 14.5185Z" fill="#788AFF"/><path d="M168.762 107.368H167.993C160.148 107.368 153.779 113.736 153.779 121.579V175.241C153.779 176.04 154.795 176.425 155.318 175.81C168.439 160.107 177.145 140.574 179.499 119.134C180.191 112.828 175.115 107.368 168.777 107.368H168.762Z" fill="#788AFF"/><path d="M153.779 33.7744V87.4356C153.779 95.2795 160.147 101.647 167.992 101.647H168.762C175.099 101.647 180.175 96.1869 179.483 89.8811C177.13 68.4412 168.423 48.9084 155.302 33.2053C154.794 32.5901 153.764 32.9746 153.764 33.7744H153.779Z" fill="#788AFF"/><path d="M473.166 35.1279V69.3025C449.769 69.3025 433.987 85.6054 433.987 110.06V209.969H395.854V110.06C395.854 65.3652 426.88 35.3894 473.166 35.1279Z" fill="#788AFF"/><path d="M475.258 125.302C475.258 76.1313 515.483 36.1737 564.922 36.1737C614.362 36.1737 654.587 76.1313 654.587 125.302C654.587 174.733 614.362 214.952 564.922 214.952C515.483 214.952 475.258 174.733 475.258 125.302ZM564.922 180.778C592.272 180.778 615.146 156.846 615.146 125.302C615.146 94.0184 592.272 70.3484 564.922 70.3484C537.572 70.3484 514.699 94.0184 514.699 125.302C514.699 156.846 537.572 180.778 564.922 180.778Z" fill="#788AFF"/><path d="M758.188 36.1737C807.627 36.1737 847.852 76.1313 847.852 125.302C847.852 174.733 807.627 214.952 763.448 214.952C739.513 214.952 717.162 202.602 709.548 193.128V262.538H671.415V125.302C671.415 76.1313 708.748 36.1737 758.188 36.1737ZM758.188 180.778C785.538 180.778 808.411 156.846 808.411 125.302C808.411 94.0184 785.538 70.3484 758.188 70.3484C730.838 70.3484 707.964 94.0184 707.964 125.302C707.964 156.846 730.838 180.778 758.188 180.778Z" fill="#788AFF"/><path d="M953.315 214.967C903.876 214.967 863.65 174.748 863.65 125.317C863.65 76.1464 903.891 36.1888 953.315 36.1888C998.801 36.1888 1048.5 74.3161 1041.67 137.944H904.414C909.413 162.921 929.657 180.793 953.33 180.793C972.528 180.793 989.617 168.965 997.77 150.555H1038.8C1028.01 187.621 993.832 214.967 953.33 214.967H953.315ZM999.847 106.107C993.017 84.5439 974.604 70.348 953.299 70.348C931.733 70.348 913.059 84.8054 905.968 106.368L999.847 106.107Z" fill="#788AFF"/><path d="M1106.09 -0.369415V209.969H1067.96V-0.369415H1106.09Z" fill="#788AFF"/><path d="M253.535 109.706H226.8C225.539 109.706 224.523 110.721 224.523 111.982V209.231C224.523 209.631 224.77 209.954 225.062 209.954H262.118C262.41 209.954 262.657 209.631 262.657 209.231V122.056C262.657 115.228 258.58 109.706 253.535 109.706Z" fill="#788AFF"/><path d="M311.034 -0.369419H225.062C224.77 -0.369419 224.523 -0.123334 224.523 0.168888V98.9708C224.523 100.232 225.539 101.247 226.8 101.247H253.535C258.042 101.247 261.764 97.9864 262.503 93.6954V33.5591H314.326C335.17 33.5591 350.937 50.0927 350.937 71.9479C350.937 109.598 314.326 110.337 314.326 110.337H311.742H279.977C274.947 110.337 271.317 114.412 271.317 119.457V139.959C271.317 142.481 273.363 144.511 275.87 144.511H318.326C360.397 144.511 384.655 107.122 384.655 67.9491C384.655 28.7759 360.458 -0.415558 311.034 -0.415558V-0.369419Z" fill="#788AFF"/></g></svg>
+    <div class="eyebrow">VCET Digital Brain · Prototype Architecture v0.1</div>
+    <h1>One loop. Three surfaces.<br><span class="thin">Built on VCET's real relationships.</span></h1>
+    <p class="sub">Internal working brief for this afternoon's architecture session. Translates the discovery week and Dave &amp; Nicole's consolidated stack ranking into a buildable prototype — scoped so Dave can drive it himself at his late-September board meeting.</p>
+    <div class="meta">
+      <span class="tag blue">Propel Labs · Internal</span>
+      <span class="tag">Aug 25, 2026</span>
+      <span class="tag">For: Lisa · Jason · James · Aniruddh</span>
+      <span class="tag">Author: Woody</span>
+    </div>
+  </div>
+
+  <!-- THE BET -->
+  <div class="bet">
+    <h3>The Bet</h3>
+    <p>Don't build five features — build the <strong style="color:#fff">Relationship Intelligence Loop</strong> that VCET's top five ranked needs all live inside: prep&nbsp;→ meet&nbsp;→ download&nbsp;→ follow up&nbsp;→ measure, with warm-network matching as the magic moment. Real cleaned data, grounded answers with receipts, nothing auto-sends. Win condition: Dave demos it <em>himself</em> to his board in late September.</p>
+    <div class="figures">
+      <div class="fig"><div class="n">5 of 5</div><div class="l">Top priorities covered</div></div>
+      <div class="fig"><div class="n">3</div><div class="l">Surfaces</div></div>
+      <div class="fig"><div class="n">Sept 9</div><div class="l">Proposed client demo</div></div>
+      <div class="fig"><div class="n">~1,500</div><div class="l">Meetings/yr it must serve</div></div>
+    </div>
+  </div>
+
+  <!-- 01 NORTH STAR -->
+  <section>
+    <div class="section-head"><span class="section-num">01</span><h2>North Star &amp; Design Principles</h2></div>
+    <p class="lead">From the board: <strong style="color:#fff">"Dave &amp; Nicole come out as raving fans."</strong> Every architecture choice below is tested against that sentence and these principles from our jam:</p>
+    <div class="principles">
+      <div class="p">Show, don't tell</div>
+      <div class="p">The Digital Brain is the interface layer</div>
+      <div class="p">Grounded in truth</div>
+      <div class="p">Human insights at the core</div>
+      <div class="p">Accelerate by transparency</div>
+      <div class="p">Think phase 10 · execute phase 1</div>
+      <div class="p">Teach through osmosis</div>
+    </div>
+  </section>
+
+  <!-- 02 PRIORITIES -->
+  <section>
+    <div class="section-head"><span class="section-num">02</span><h2>What Discovery Told Us → Prototype Scope</h2></div>
+    <p class="lead">Dave and Nicole's consolidated stack ranking, mapped to what ships in prototype v0, what follows fast in v1.1, and what stays on the roadmap.</p>
+    <div style="margin-top:20px;overflow-x:auto;">
+    <table>
+      <tr><th style="width:52px;">Rank</th><th>Requirement</th><th style="width:56px;">Dave</th><th style="width:60px;">Nicole</th><th style="width:120px;">Scope</th><th>Where it lives</th></tr>
+      <tr><td class="rank">1</td><td><strong>Network Needs Matching</strong> — warm mentors, experts, talent, funding for entrepreneurs</td><td>1</td><td>2</td><td><span class="tag green">v0 · Real</span></td><td>Surface 1 — the magic moment</td></tr>
+      <tr><td class="rank">2</td><td><strong>Overall Relationship Metrics</strong> — health week/month/year; days-to-meeting</td><td>5</td><td>1</td><td><span class="tag green">v0 · Real</span></td><td>Surface 2 — The Pulse</td></tr>
+      <tr><td class="rank">3</td><td><strong>Portfolio Company News</strong> — real-time news + Getro job postings</td><td>2</td><td>6</td><td><span class="tag blue">v0 · Staged feed</span></td><td>Surface 2 — Pulse panel</td></tr>
+      <tr><td class="rank">4</td><td><strong>See All Relationship Activities</strong> — both calendars, roll-up, missing notes</td><td>6</td><td>3</td><td><span class="tag green">v0 · Real</span></td><td>Surface 2 — The Pulse</td></tr>
+      <tr><td class="rank">5</td><td><strong>Quick &amp; Substantive Follow Up</strong> — 16 meetings/week, matches embedded</td><td>3</td><td>—</td><td><span class="tag green">v0 · Real</span></td><td>Surface 3 — The Loop</td></tr>
+      <tr><td class="rank">6</td><td><strong>Inbound Contact Qualification</strong> — kill the "slop from Utah or Ukraine"</td><td>—</td><td>4</td><td><span class="tag amber">v1.1 agent</span></td><td>Gmail triage agent, 2 wks post-demo</td></tr>
+      <tr><td class="rank">6</td><td><strong>Industry Intelligence</strong> — 15 inbox sources → shareable insight</td><td>4</td><td>—</td><td><span class="tag amber">v1.1</span></td><td>Brain Q&amp;A first; digest later</td></tr>
+      <tr><td class="rank">8</td><td><strong>See My Relationship Tasks</strong></td><td>—</td><td>5</td><td><span class="tag green">v0 · Real</span></td><td>Pulse — follow-ups owed</td></tr>
+      <tr><td class="rank">9</td><td><strong>Pre-Meeting Context</strong> — 4.5 meetings/day prepared</td><td>—</td><td>7</td><td><span class="tag green">v0 · Real</span></td><td>Surface 3 — The Loop</td></tr>
+      <tr><td class="rank">9</td><td><strong>Add Inbound Contacts</strong></td><td>7</td><td>—</td><td><span class="tag amber">v1.1</span></td><td>Rides on Clean House pipeline</td></tr>
+      <tr><td class="rank">11</td><td><strong>Post-Meeting Download</strong></td><td>—</td><td>8</td><td><span class="tag green">v0 · Real</span></td><td>Surface 3 — The Loop</td></tr>
+      <tr><td class="rank">11–18</td><td>Internal metrics · Marketing cross-channel · External reporting · Content suggestion · Team ops · Podcast ops · Newsletter</td><td colspan="2"></td><td><span class="tag">Roadmap</span></td><td>Shown as phase-10 vision, not built</td></tr>
+    </table>
+    </div>
+    <p style="margin-top:14px;color:var(--text-tertiary);font-size:13px;">Scope rule for this afternoon: the v0 line freezes today. Anything new goes to v1.1 or roadmap — no exceptions before Sept 9.</p>
+  </section>
+
+  <!-- 03 THE CONCEPT -->
+  <section>
+    <div class="section-head"><span class="section-num">03</span><h2>The Concept: "A Day at VCET" Demo Narrative</h2></div>
+    <p class="lead">We don't demo features — we demo their Tuesday. One continuous loop, on their real contacts, in under 12 minutes. Jason owns turning this beat sheet into the script.</p>
+    <div class="card" style="margin-top:20px;">
+      <div class="loop">
+        <div class="loop-item"><div class="t">8:45 AM</div><div><h4>Open The Pulse</h4><p>This week vs. last: meetings held, days-to-meeting trend, follow-ups owed, meetings missing notes — across <em>both</em> Dave's and Nicole's calendars. Portfolio news panel shows an overnight raise.</p><div class="cov"><span class="tag">Covers #2 · #4 · #3 · #8</span></div></div></div>
+        <div class="loop-item"><div class="t">9:55 AM</div><div><h4>Pre-meeting card fires</h4><p>Five minutes before the 10:00, a card: how we know them, full touch history, last commitment made, who else at VCET has context, one suggested question. Every fact links to its source record.</p><div class="cov"><span class="tag">Covers #9</span></div></div></div>
+        <div class="loop-item"><div class="t">11:00 AM</div><div><h4>The magic moment</h4><p>In an advising session, Dave types: <em>"hardware founder needs supply-chain intros, Vermont."</em> As he types, warm matches populate live — warmth score, why-this-person rationale, whether Dave or Nicole holds the warmer path, receipts underneath.</p><div class="cov"><span class="tag blue">Covers #1 — the wow</span></div></div></div>
+        <div class="loop-item"><div class="t">2:00 PM</div><div><h4>60-second download</h4><p>Post-meeting: voice-or-type note attaches to the contact, action items extracted, interests tagged into the graph.</p><div class="cov"><span class="tag">Covers #11</span></div></div></div>
+        <div class="loop-item"><div class="t">2:05 PM</div><div><h4>Follow-up composer</h4><p>Draft follow-up in their voice with the two warm intros embedded. Dave edits, Dave sends. Nothing goes out on its own.</p><div class="cov"><span class="tag">Covers #5</span></div></div></div>
+        <div class="loop-item"><div class="t">FRI NOON</div><div><h4>The roll-up</h4><p>Week closed: who we helped, what's owed, what fell through — the Monday Noon meeting, pre-assembled.</p><div class="cov"><span class="tag">Covers #2 · #4</span></div></div></div>
+      </div>
+    </div>
+    <div style="margin-top:16px;" class="quote">"Magic: as we type that they're interested in X, it goes to the databases in real time — here are some suggestions, Dave."<span class="who">— Discovery session, Needs Matching frame</span></div>
+  </section>
+
+  <!-- 04 SURFACES -->
+  <section>
+    <div class="section-head"><span class="section-num">04</span><h2>Three Surfaces</h2></div>
+    <div class="grid-3">
+      <div class="card surface"><span class="s-num">S1</span>
+        <div class="s-tag">The Brain</div><h3>Ask &amp; Match</h3>
+        <ul>
+          <li>Search-first with live matching as you type; chat for open questions</li>
+          <li>Structured filters (tags, geo, warmth) + semantic interest match</li>
+          <li>Six match verticals: Talent · Advisory · Supply Chain · SME · Funding · Market Research</li>
+          <li>Dual warmth: Dave-path vs Nicole-path + overlap ("we both know them")</li>
+          <li>Every answer cites its source record — or says "I don't know"</li>
+        </ul>
+      </div>
+      <div class="card surface"><span class="s-num">S2</span>
+        <div class="s-tag">The Pulse</div><h3>Monday Dashboard</h3>
+        <ul>
+          <li>Relationship health: days-to-meeting, touches/wk, new vs existing</li>
+          <li>Both-calendars activity roll-up: look back to evaluate, look ahead to pass context</li>
+          <li>Follow-ups owed · meetings missing notes · my tasks</li>
+          <li>Portfolio Pulse: news + Getro job postings feed</li>
+          <li>Replaces "Google Calendar as the homepage of VCET"</li>
+        </ul>
+      </div>
+      <div class="card surface"><span class="s-num">S3</span>
+        <div class="s-tag">The Loop</div><h3>Meeting Flow</h3>
+        <ul>
+          <li>Pre-meeting card, auto-fired from calendar</li>
+          <li>60-second post-meeting download (voice or type)</li>
+          <li>Follow-up composer: substantive draft, matches embedded</li>
+          <li>Draft-only by design — the human hits send</li>
+          <li>Interests captured here feed the graph, which feeds S1</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 ARCHITECTURE -->
+  <section>
+    <div class="section-head"><span class="section-num">05</span><h2>System Architecture</h2></div>
+    <p class="lead">Same four layers we sketched on the Evolution frame — now with real components. Aligned to the Propel RAG pattern already on the VCET Ecosystem Map.</p>
+    <div class="stack">
+      <div class="layer l4">
+        <div class="l-name">Interaction<span class="l-sub">Layer 4 · What they touch</span></div>
+        <div class="l-body"><p>React web app, VCET-branded, three surfaces. Later channels: Slack digest, email brief — the Brain is the interface layer, not another silo.</p>
+        <div class="chips"><span class="chip hot">The Brain</span><span class="chip hot">The Pulse</span><span class="chip hot">The Loop</span><span class="chip">Slack/email (v1.1)</span></div></div>
+      </div>
+      <div class="flow-arrow">↕ grounded answers · cited sources</div>
+      <div class="layer l3">
+        <div class="l-name">Intelligence<span class="l-sub">Layer 3 · RAG + matching</span></div>
+        <div class="l-body"><p>Claude via API (zero-retention). Hybrid retrieval: structured graph filters + vector search over profiles, notes, and interaction snippets. Match engine: intent parse → candidate retrieval → rerank by warmth × relevance → rationale with citations. Guardrails: citation-required, draft-only outputs, confidence shown.</p>
+        <div class="chips"><span class="chip hot">Claude API</span><span class="chip">Embedding index</span><span class="chip">Match engine</span><span class="chip">Eval set (Dave/Nicole gold Qs)</span></div></div>
+      </div>
+      <div class="flow-arrow">↕ unified contact graph · events</div>
+      <div class="layer l2">
+        <div class="l-name">Integration<span class="l-sub">Layer 2 · Firebase</span></div>
+        <div class="l-body"><p>Firestore holds the Contact Graph; Cloud Functions run connectors on nightly sync + webhooks. Entity resolution is email-first (their own workflow: contacts keyed by email, not name), fuzzy name+org fallback. Everything exportable as JSON/CSV — no lock-in.</p>
+        <div class="chips"><span class="chip hot">Firestore graph</span><span class="chip">Cloud Functions</span><span class="chip">Nightly + webhook sync</span><span class="chip">Email-first identity</span></div></div>
+      </div>
+      <div class="flow-arrow">↕ APIs · OAuth · CSV import</div>
+      <div class="layer l1">
+        <div class="l-name">Data Sources<span class="l-sub">Layer 1 · Their tools</span></div>
+        <div class="l-body"><p>HubSpot (post Clean-House), Gmail ×2 metadata-first (bodies fetched only on-demand, scoped), Google Calendar ×2, LinkedIn connection exports ×2 (CSV snapshot — no scraping), Getro jobs feed, Google Alerts RSS. Marketing sources (MailChimp, socials, podcast) wait for phase 2.</p>
+        <div class="chips"><span class="chip hot">HubSpot</span><span class="chip hot">Gmail ×2</span><span class="chip hot">GCal ×2</span><span class="chip hot">LinkedIn CSV ×2</span><span class="chip">Getro</span><span class="chip">Google Alerts</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 CONTACT GRAPH -->
+  <section>
+    <div class="section-head"><span class="section-num">06</span><h2>The Core Asset: Contact Graph</h2></div>
+    <p class="lead">The prototype's moat isn't the UI — it's a unified graph of who VCET knows, how warm, and what they need or offer. This is what the Clean House Agent is really building.</p>
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="card outlined">
+        <h3 style="font-size:16px;margin-bottom:10px;color:var(--accent-pale);">Entities &amp; edges</h3>
+        <p style="color:var(--text-secondary);font-size:14px;"><strong style="color:#fff;">Person</strong> — identity (email-first), org, roles, VCET tags (Investor · Mentor · Partner · Founder · Job Seeker · Member · Alumni) + affinity tags (Software · Vermont · UVM · Middlebury · Boston · Serial Entrepreneur …).<br><br>
+        <strong style="color:#fff;">Interaction</strong> — every email, meeting, note, and intro as a timestamped edge with source reference.<br><br>
+        <strong style="color:#fff;">Needs / Offers ledger</strong> — what each contact seeks or can give, across the six match verticals; captured at meeting download.</p>
+      </div>
+      <div class="card outlined">
+        <h3 style="font-size:16px;margin-bottom:10px;color:var(--accent-pale);">Warmth, made honest</h3>
+        <p style="color:var(--text-secondary);font-size:14px;"><strong style="color:#fff;">Warmth(person, owner)</strong> = recency × frequency × channel mix × reciprocity — computed <em>per owner</em>, so Dave-warmth and Nicole-warmth are distinct, with overlap surfaced.<br><br>
+        Offline reality check: warmth is <em>adjustable</em>. One tap to boost or demote ("we're closer than the data shows") — the human correction trains the graph. We show the score as a signal, never as truth.</p>
+        <div style="margin-top:12px;" class="quote">"I'm closer with people on LinkedIn than HubSpot — more personal connection vs. just logging emails."<span class="who">— Nicole, discovery</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 TRUST -->
+  <section>
+    <div class="section-head"><span class="section-num">07</span><h2>Trust Architecture — Dave-Proofing</h2></div>
+    <p class="lead">Dave's ranking says matching first, but his quotes say trust decides adoption. These are commitments, not features:</p>
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:8px;">Grounded in truth</h3>
+        <p style="color:var(--text-secondary);font-size:14px;">Every claim carries a citation that click-throughs to the HubSpot record, email, or note it came from. No source → the Brain says "I don't know." Accuracy eval set built from 25 gold questions Dave &amp; Nicole write themselves — we publish the score to them.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:8px;">Human in the loop</h3>
+        <p style="color:var(--text-secondary);font-size:14px;">Nothing auto-sends. Matches are suggestions with a validate step before any intro. The system makes them faster, not lazier — their judgment is the product's core, ours amplifies it.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:8px;">Data stays theirs</h3>
+        <p style="color:var(--text-secondary);font-size:14px;">Deployed into VCET's own Google Cloud project. LLM calls run zero-retention; no training on their data. Attachments and pitch decks are <em>excluded from the index by default</em> — opt-in only, per Dave's exact concern.</p>
+      </div>
+      <div class="card">
+        <h3 style="font-size:16px;margin-bottom:8px;">No lock-in</h3>
+        <p style="color:var(--text-secondary);font-size:14px;">Full graph export (JSON/CSV) at any time; model-agnostic LLM adapter; connectors read from their systems of record rather than replacing them. The requirement from the Evolution frame, honored in the design.</p>
+      </div>
+    </div>
+    <div style="margin-top:16px;" class="quote">"Don't want to give Claude someone else's deck — I don't know where it goes." · "Don't want it to make me lazy — gotta be putting in the brainpower."<span class="who">— Dave, discovery</span></div>
+  </section>
+
+  <!-- 08 REAL VS STAGED -->
+  <section>
+    <div class="section-head"><span class="section-num">08</span><h2>Demo Honesty: Real vs. Staged</h2></div>
+    <p class="lead">Show, don't tell — but never fake what we claim is live. This matrix goes in the demo script so we can say out loud what's real.</p>
+    <div style="margin-top:18px;">
+    <table class="matrix">
+      <tr><th>Capability</th><th style="width:150px;">In the Sept 9 demo</th><th>How</th></tr>
+      <tr><td>Contact graph + warmth</td><td><span class="tag green">Real</span></td><td>Cleaned HubSpot + Gmail metadata + Calendar, live in Firestore</td></tr>
+      <tr><td>Needs matching (S1)</td><td><span class="tag green">Real</span></td><td>Live retrieval + rerank over the real graph</td></tr>
+      <tr><td>Q&amp;A with citations</td><td><span class="tag green">Real</span></td><td>RAG over notes, contacts, interactions</td></tr>
+      <tr><td>Pre-meeting cards / download / follow-up (S3)</td><td><span class="tag green">Real</span></td><td>Wired to their actual calendars</td></tr>
+      <tr><td>LinkedIn warmth layer</td><td><span class="tag blue">Snapshot</span></td><td>Connection CSV exports ×2, refreshed quarterly — stated openly</td></tr>
+      <tr><td>Portfolio news + Getro jobs</td><td><span class="tag blue">Staged</span></td><td>Real headlines, pre-fetched for demo; live feed ships v1.1</td></tr>
+      <tr><td>Marketing / team ops / reporting</td><td><span class="tag">Vision only</span></td><td>Phase-10 slide at demo close — the expansion story</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- 09 BUILD PLAN -->
+  <section>
+    <div class="section-head"><span class="section-num">09</span><h2>Build Plan — Two Weeks to Working Prototype</h2></div>
+    <p class="lead">Backplanned from the late-September VCET board meeting, with buffer. Woody in Toronto Aug 27–28; plan assumes it.</p>
+    <div class="tl">
+      <div class="tl-row"><div class="d">Today · Aug 25</div><div class="o">ALL</div><div class="w"><strong>This session:</strong> ratify scope line + 5 decisions below. <strong>Lisa</strong> sends VCET the data-access pack today: LinkedIn CSV export how-to (×2), Gmail/GCal OAuth scopes, HubSpot API key.</div></div>
+      <div class="tl-row"><div class="d">Aug 26–29</div><div class="o">ANI</div><div class="w"><strong>Clean House → Graph:</strong> Clean House Agent output lands as the Contact Graph ETL. Firestore schema, entity resolution, embedding index, matching API v0.</div></div>
+      <div class="tl-row"><div class="d">Aug 26–29</div><div class="o">JAMES</div><div class="w"><strong>Design system + S1 comps:</strong> VCET-branded UI kit on Propel bones; The Brain screens incl. live-match interaction pattern.</div></div>
+      <div class="tl-row"><div class="d">Aug 26–29</div><div class="o">JASON</div><div class="w"><strong>Demo narrative v1:</strong> "A Day at VCET" beat sheet → script; plus the productization one-pager (how this demo becomes the repeatable ecosystem-org pitch).</div></div>
+      <div class="tl-row"><div class="d">Sept 1–5</div><div class="o">ANI+JAMES</div><div class="w"><strong>S1 end-to-end</strong> (the wow) by Wed; S2 + S3 assembled by Fri. <strong>Internal dry run Fri Sept 4</strong> — full loop on real data.</div></div>
+      <div class="tl-row"><div class="d">Sept 8</div><div class="o">LISA</div><div class="w"><strong>Nicole data-QA session:</strong> she spot-checks warmth scores and match quality before Dave ever sees it. Accuracy eval scored.</div></div>
+      <div class="tl-row"><div class="d">Sept 9</div><div class="o">ALL</div><div class="w"><strong>Demo to Dave &amp; Nicole.</strong> Close by handing Dave the driver's seat: he runs the magic-moment query himself.</div></div>
+      <div class="tl-row"><div class="d">Sept 10–25</div><div class="o">TEAM</div><div class="w"><strong>Iterate + board prep:</strong> fix list, v1.1 inbound-qualification agent starts, coach Dave's 5-minute board walkthrough.</div></div>
+    </div>
+  </section>
+
+  <!-- 10 DECISIONS -->
+  <section>
+    <div class="section-head"><span class="section-num">10</span><h2>Decide This Afternoon</h2></div>
+    <div class="card" style="padding:6px 22px;">
+      <div class="decision"><div class="n">D1</div><div><h4>Demo date commitment</h4><p>Anchor the sprint or let it drift.</p><p class="rec"><b>Recommend:</b> Wed Sept 9, Lisa confirms with Nicole this week.</p></div></div>
+      <div class="decision"><div class="n">D2</div><div><h4>Real VCET data vs. anonymized for v0</h4><p>Real data is the trust accelerant and the demo's power; anonymized is safer but hollow.</p><p class="rec"><b>Recommend:</b> Real, deployed in VCET's own cloud project, decks/attachments excluded by default.</p></div></div>
+      <div class="decision"><div class="n">D3</div><div><h4>S1 interaction model</h4><p>Chat-first vs. search-with-live-matching.</p><p class="rec"><b>Recommend:</b> Search-first with matches populating as you type — it's their literal "magic" quote — chat available for open questions.</p></div></div>
+      <div class="decision"><div class="n">D4</div><div><h4>LinkedIn strategy</h4><p>No compliant API for connection depth. Options: CSV snapshot, browser-assist later, or omit.</p><p class="rec"><b>Recommend:</b> CSV snapshot ×2 now (10-min task for each of them), warmth computed from our own Gmail/HubSpot signals layered on top. Say it plainly to the client.</p></div></div>
+      <div class="decision"><div class="n">D5</div><div><h4>Inbound Qualification in v0?</h4><p>Nicole's #4 and a growing pain — but a separate surface (email triage).</p><p class="rec"><b>Recommend:</b> v1.1, started Sept 10. Name it in the demo so Nicole hears it's next, not never.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 11 RISKS -->
+  <section>
+    <div class="section-head"><span class="section-num">11</span><h2>Top Risks &amp; Mitigations</h2></div>
+    <div class="grid-2">
+      <div class="card outlined"><h3 style="font-size:15px;margin-bottom:6px;"><span class="tag red">R1</span>&nbsp; LinkedIn depth</h3><p style="color:var(--text-secondary);font-size:14px;">Their warmest data lives where we can't API. Mitigate: CSV snapshots + our own interaction-derived warmth; be transparent; revisit browser-assist in v2 only if the gap actually hurts match quality.</p></div>
+      <div class="card outlined"><h3 style="font-size:15px;margin-bottom:6px;"><span class="tag red">R2</span>&nbsp; HubSpot data quality</h3><p style="color:var(--text-secondary);font-size:14px;">Garbage in, distrust out — and Dave is accuracy-obsessed. Mitigate: Clean House completes <em>before</em> graph build; Nicole QA session gates the demo; eval score shown, not hidden.</p></div>
+      <div class="card outlined"><h3 style="font-size:15px;margin-bottom:6px;"><span class="tag red">R3</span>&nbsp; Trust in suggestions</h3><p style="color:var(--text-secondary);font-size:14px;">Discovery flagged it: "Will they trust the bot? Will they validate?" Mitigate: citations-or-silence, validate-before-intro flow, warmth override — the system defers to them visibly.</p></div>
+      <div class="card outlined"><h3 style="font-size:15px;margin-bottom:6px;"><span class="tag red">R4</span>&nbsp; Scope creep</h3><p style="color:var(--text-secondary);font-size:14px;">Eighteen ranked needs, five weeks. Mitigate: v0 line frozen today; everything new routes to v1.1/roadmap; Lisa holds the line as delivery DRI.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>PROPEL LABS · VCET DIGITAL BRAIN · PROTOTYPE ARCHITECTURE v0.1</span>
+    <span>INTERNAL — AUG 25 2026</span>
+  </footer>
+</div>
+</body>
+</html>
