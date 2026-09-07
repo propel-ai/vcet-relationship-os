@@ -24,6 +24,11 @@ one of the twenty classic 8-Ball replies while the readout gives the Dave & Nico
 of it, plus a Start Here episode to go listen to. The cake in the bottom corner opens the
 note from the Propel team.
 
+**Triple-click the birthday note to rewrite it** — the same secret the menu-bar
+mark uses for the controller. Edits save as you type and survive a reload, but
+they live in that browser's `localStorage` only: everyone else still sees the
+note in `data/wisdom.js`. "Revert" in the edit bar restores the original.
+
 It is not part of the story: no beat, no badge, no notifications. The answers are written
 *in* their voice, not quoted *from* them. The fifteen podcast links are real, verified
 episodes. Everything lives in [`data/wisdom.js`](data/wisdom.js).

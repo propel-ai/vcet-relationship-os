@@ -21,6 +21,9 @@
   var phase = 'idle';     // idle | shaking | answered
   var current = null;     // the wisdom record on screen
   var cardOpen = true;    // the note from us — open on arrival, then behind the cake
+  var editing = false;    // triple-click the note to rewrite it
+  var cardClicks = 0, cardClickTimer = null;
+  var CARD_KEY = 'vcet8ball:card';
   var bag = [];           // shuffled draw pile, so you don't repeat until you must
   var drawn = 0;
   var timers = [];
@@ -228,6 +231,28 @@
     '.w8-card-x:hover{color:#fff;background:rgba(255,255,255,.12);}',
     '.w8-card-x:focus-visible{outline:2px solid rgba(255,255,255,.8);outline-offset:1px;}',
 
+    /* ---- editing the note (triple-click it) ---- */
+    '.w8-card.editing{border-color:rgba(255,255,255,.42);',
+      'box-shadow:0 22px 48px rgba(0,0,0,.46),0 0 0 1px rgba(255,255,255,.18);}',
+    '.w8-card [contenteditable]{outline:0;border-radius:5px;',
+      'transition:background .16s,box-shadow .16s;}',
+    '.w8-card.editing [contenteditable]{background:rgba(255,255,255,.06);',
+      'box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);',
+      'padding:3px 6px;margin-left:-6px;margin-right:-6px;cursor:text;}',
+    '.w8-card.editing [contenteditable]:focus{background:rgba(255,255,255,.11);',
+      'box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);}',
+    '.w8-edit-hint{display:none;}',
+    '.w8-card.editing .w8-edit-hint{display:flex;align-items:center;gap:10px;',
+      'margin:14px 0 0 !important;padding-top:12px;',
+      'border-top:1px solid rgba(255,255,255,.14);',
+      'font-family:var(--mono);font-size:9px;letter-spacing:.1em;',
+      'text-transform:uppercase;color:rgba(237,231,246,.5) !important;}',
+    '.w8-edit-hint button{margin-left:auto;appearance:none;cursor:pointer;',
+      'font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;',
+      'color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);',
+      'border-radius:999px;padding:5px 11px;transition:background .16s;}',
+    '.w8-edit-hint button:hover{background:rgba(255,255,255,.22);}',
+
     /* ---- tighter frames ---- */
     '@media (max-height:940px){',
       '.w8-title{font-size:40px;}.w8-ball{width:236px;height:236px;}',
@@ -422,7 +447,8 @@
 
     html += '<p class="w8-ribbon">' + W.esc(d.ribbon || '') + '</p>';
 
-    var card = d.card;
+    editing = false;   // innerHTML is about to be replaced; nothing stays editable
+    var card = cardData();
     if (card) {
       html += '<button type="button" class="w8-cake" data-act="card-open" ' +
         'aria-label="A note from the Propel team"' + (cardOpen ? ' hidden' : '') + '>🎂</button>';
@@ -432,10 +458,14 @@
       html += '<aside class="w8-card' + (cardOpen ? ' on' : '') + '" role="note"' +
           (cardOpen ? '' : ' aria-hidden="true"') + '>' +
         '<button type="button" class="w8-card-x" data-act="card-close" aria-label="Close">&times;</button>' +
-        (card.body || []).map(function (para) {
-          return '<p>' + W.esc(para) + '</p>';
+        (card.body || []).map(function (para, i) {
+          return '<p data-p="' + i + '">' + W.esc(para) + '</p>';
         }).join('') +
-        '<p class="w8-sign">' + W.esc(card.signoff || '') + '</p>' +
+        '<p class="w8-sign" data-sign>' + W.esc(card.signoff || '') + '</p>' +
+        // Rendered always, revealed by .editing — so entering edit mode is a
+        // class toggle and never a repaint that would drop what you typed.
+        '<p class="w8-edit-hint">Editing &middot; click away when you are done' +
+          '<button type="button" data-act="card-revert">Revert</button></p>' +
       '</aside>';
     }
 
@@ -453,7 +483,96 @@
     if (act === 'shake') shake();
     if (act === 'card-open')  setCard(true);
     if (act === 'card-close') setCard(false);
+    if (act === 'card-revert') revertCard();
   });
+
+  /* Triple-click the note to edit it; click anywhere off it to finish. */
+  document.addEventListener('click', function (e) {
+    if (!root || W.openApp !== 'wisdom') return;
+    var inCard = e.target.closest && e.target.closest('.w8-card');
+
+    if (!inCard || !root.contains(inCard)) {
+      if (editing) setEditing(false);   // clicking away commits the edit
+      cardClicks = 0;
+      return;
+    }
+    if (e.target.closest('button')) return;   // × and Revert aren't edit triggers
+    if (editing) return;                      // already editing: let the caret move
+
+    cardClicks++;
+    clearTimeout(cardClickTimer);
+    cardClickTimer = setTimeout(function () { cardClicks = 0; }, 600);
+    if (cardClicks >= 3) { cardClicks = 0; setEditing(true); }
+  });
+
+  /* Every keystroke is saved, so a repaint mid-edit costs nothing. */
+  document.addEventListener('input', function (e) {
+    if (!editing || !root) return;
+    if (e.target.closest && e.target.closest('.w8-card')) harvest();
+  });
+
+  /* ------------------------------------------------------- editing the note */
+  /* Triple-click the note to rewrite it — the same secret the menu-bar mark
+     uses to open the controller. Edits are per-browser (localStorage), so the
+     card in data/wisdom.js stays the thing everyone else sees. */
+  function storedCard() {
+    try { var raw = localStorage.getItem(CARD_KEY); return raw ? JSON.parse(raw) : null; }
+    catch (e) { return null; }
+  }
+
+  function cardData() {
+    var base = D().card;
+    if (!base) return null;
+    var saved = storedCard();
+    if (!saved) return base;
+    return {
+      body: (saved.body && saved.body.length) ? saved.body : base.body,
+      signoff: saved.signoff != null ? saved.signoff : base.signoff
+    };
+  }
+
+  /* Read the card back out of the DOM. Called on every keystroke, so a repaint
+     mid-edit (a shake, say) can never lose what was typed. */
+  function harvest() {
+    var card = root && root.querySelector('.w8-card');
+    if (!card) return;
+    var body = [].map.call(card.querySelectorAll('[data-p]'), function (el) {
+      return el.innerText.replace(/\s+/g, ' ').trim();
+    }).filter(function (t) { return t.length; });
+    var sign = card.querySelector('[data-sign]');
+    try {
+      localStorage.setItem(CARD_KEY, JSON.stringify({
+        body: body,
+        signoff: sign ? sign.innerText.replace(/\s+/g, ' ').trim() : ''
+      }));
+    } catch (e) {}
+  }
+
+  function setEditing(on) {
+    var card = root && root.querySelector('.w8-card');
+    if (!card) return;
+    editing = on;
+    card.classList.toggle('editing', on);
+    [].forEach.call(card.querySelectorAll('[data-p],[data-sign]'), function (el) {
+      if (on) el.setAttribute('contenteditable', 'true');
+      else el.removeAttribute('contenteditable');
+    });
+    if (on) {
+      var first = card.querySelector('[data-p]');
+      if (first) first.focus({ preventScroll: true });
+    } else {
+      harvest();
+      var sel = window.getSelection && window.getSelection();
+      if (sel && sel.removeAllRanges) sel.removeAllRanges();
+    }
+  }
+
+  function revertCard() {
+    try { localStorage.removeItem(CARD_KEY); } catch (e) {}
+    editing = false;
+    paint(true);              // content changed but the signature didn't
+    setCard(true);
+  }
 
   /* Open/close the note without repainting: the ball, the answer and the
      episode link underneath must not flicker or replay their animations. */
@@ -484,7 +603,8 @@
     if (!root || !root.querySelector('.w8-card.on')) return;
     e.stopPropagation();
     e.preventDefault();
-    setCard(false);
+    if (editing) setEditing(false);   // finish the edit before closing the note
+    else setCard(false);
   }, true);
 
   window.VCET_APPS.wisdom = {
