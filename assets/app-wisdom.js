@@ -194,13 +194,28 @@
     '.w8-cake:hover{background:rgba(255,255,255,.22);transform:translateY(-2px);}',
     '.w8-cake:focus-visible{outline:2px solid rgba(255,255,255,.8);outline-offset:3px;}',
 
-    '.w8-card{position:absolute;right:18px;top:18px;z-index:6;width:300px;',
+    /* A popover hanging off the cake, not a panel pinned to the corner of the
+       window: it sits just above the button and grows out of it. Floating on
+       its own layer, so showing it never moves anything underneath. */
+    '.w8-card{position:absolute;right:16px;bottom:86px;z-index:6;width:300px;',
       'padding:22px 22px 18px;border-radius:14px;text-align:left;',
-      'background:rgba(20,14,44,.72);border:1px solid rgba(255,255,255,.16);',
+      'background:rgba(20,14,44,.82);border:1px solid rgba(255,255,255,.16);',
       'backdrop-filter:saturate(160%) blur(18px);',
       '-webkit-backdrop-filter:saturate(160%) blur(18px);',
-      'box-shadow:0 22px 48px rgba(0,0,0,.42);',
-      'animation:w8rise .42s cubic-bezier(.2,.8,.3,1) both;}',
+      'box-shadow:0 22px 48px rgba(0,0,0,.46);',
+      'opacity:0;visibility:hidden;pointer-events:none;',
+      'transform:translateY(10px) scale(.96);transform-origin:calc(100% - 14px) 100%;',
+      'transition:opacity .2s ease,transform .26s cubic-bezier(.2,.8,.3,1),',
+        'visibility 0s linear .26s;}',
+    '.w8-card.on{opacity:1;visibility:visible;pointer-events:auto;',
+      'transform:translateY(0) scale(1);transition-delay:0s;}',
+
+    /* the little tail pointing down at the cake */
+    '.w8-card::after{content:"";position:absolute;right:26px;bottom:-7px;',
+      'width:13px;height:13px;transform:rotate(45deg);',
+      'background:rgba(20,14,44,.82);',
+      'border-right:1px solid rgba(255,255,255,.16);',
+      'border-bottom:1px solid rgba(255,255,255,.16);}',
     '.w8-card p{margin:0 0 12px;font-size:13.5px;line-height:1.62;',
       'color:rgba(237,231,246,.9);}',
     '.w8-card p:last-of-type{margin-bottom:0;}',
@@ -230,7 +245,8 @@
       '.w8-root[data-phase="shaking"] .w8-ball,',
       '.w8-root[data-phase="shaking"] .w8-win,',
       '.w8-root[data-phase="answered"] .w8-tri,',
-      '.w8-quote,.w8-pod,.w8-src,.w8-again,.w8-card{animation:none;}}'
+      '.w8-quote,.w8-pod,.w8-src,.w8-again{animation:none;}',
+      '.w8-card{transition:none;}}'
   ];
 
   function injectCSS() {
@@ -360,15 +376,16 @@
       html += '<button type="button" class="w8-cake" data-act="card-open" ' +
         'aria-label="A note from the Propel team"' + (cardOpen ? ' hidden' : '') + '>🎂</button>';
 
-      if (cardOpen) {
-        html += '<aside class="w8-card" role="note">' +
-          '<button type="button" class="w8-card-x" data-act="card-close" aria-label="Close">&times;</button>' +
-          (card.body || []).map(function (para) {
-            return '<p>' + W.esc(para) + '</p>';
-          }).join('') +
-          '<p class="w8-sign">' + W.esc(card.signoff || '') + '</p>' +
-        '</aside>';
-      }
+      // Always rendered, shown by class — so opening and closing it is a
+      // transition on two elements, never a rebuild of the view behind it.
+      html += '<aside class="w8-card' + (cardOpen ? ' on' : '') + '" role="note"' +
+          (cardOpen ? '' : ' aria-hidden="true"') + '>' +
+        '<button type="button" class="w8-card-x" data-act="card-close" aria-label="Close">&times;</button>' +
+        (card.body || []).map(function (para) {
+          return '<p>' + W.esc(para) + '</p>';
+        }).join('') +
+        '<p class="w8-sign">' + W.esc(card.signoff || '') + '</p>' +
+      '</aside>';
     }
 
 
@@ -383,14 +400,35 @@
 
     var act = b.dataset.act;
     if (act === 'shake') shake();
-    if (act === 'card-open')  { cardOpen = true;  paint(); focusCard('.w8-card-x'); }
-    if (act === 'card-close') { cardOpen = false; paint(); focusCard('.w8-cake'); }
+    if (act === 'card-open')  setCard(true);
+    if (act === 'card-close') setCard(false);
   });
 
-  function focusCard(sel) {
-    var el = root && root.querySelector(sel);
-    if (el) el.focus({ preventScroll: true });
+  /* Open/close the note without repainting: the ball, the answer and the
+     episode link underneath must not flicker or replay their animations. */
+  function setCard(open) {
+    if (!root) return;
+    cardOpen = open;
+    var card = root.querySelector('.w8-card');
+    var cake = root.querySelector('.w8-cake');
+    if (card) {
+      card.classList.toggle('on', open);
+      if (open) card.removeAttribute('aria-hidden');
+      else card.setAttribute('aria-hidden', 'true');
+    }
+    if (cake) cake.hidden = open;
+    var focus = open ? card && card.querySelector('.w8-card-x') : cake;
+    if (focus) focus.focus({ preventScroll: true });
   }
+
+  /* Escape closes the note before it closes the window. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape' || W.openApp !== 'wisdom' || !cardOpen) return;
+    if (!root || !root.querySelector('.w8-card.on')) return;
+    e.stopPropagation();
+    e.preventDefault();
+    setCard(false);
+  }, true);
 
   window.VCET_APPS.wisdom = {
     mount: mount,
