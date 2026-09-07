@@ -209,6 +209,32 @@ html, body {
   transition: opacity .24s, transform .24s cubic-bezier(.2,.8,.3,1);
 }
 .notif.in { opacity: 1; transform: none; }
+
+/* Dismiss control. A sibling of the notification button, not a child — nested
+   buttons are invalid, and a sibling's click can't reach the open-the-app
+   handler. Dismissing touches the DOM only; it fires no world event, so it
+   can never repaint the app underneath. */
+.notif-wrap { position: relative; }
+.notif-x {
+  position: absolute; top: -6px; left: -6px; z-index: 1;
+  width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%;
+  display: grid; place-items: center; cursor: pointer;
+  background: rgba(39,46,55,.92); color: var(--white);
+  font-family: var(--body); font-size: 14px; line-height: 1;
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  opacity: 0; transform: scale(.8);
+  transition: opacity .16s, transform .16s;
+}
+.notif-wrap:hover .notif-x,
+.notif-wrap:focus-within .notif-x { opacity: 1; transform: none; }
+.notif-x:focus-visible {
+  opacity: 1; transform: none;
+  outline: 2px solid var(--orange); outline-offset: 2px;
+}
+/* Touch screens have no hover, so the × has to stand permanently. */
+@media (hover: none) {
+  .notif-x { opacity: 1; transform: none; width: 24px; height: 24px; font-size: 16px; }
+}
 .notif-icon { flex: 0 0 34px; }
 .notif-icon svg { width: 34px; height: 34px; border-radius: 8px; display: block; }
 .notif-body { flex: 1 1 auto; min-width: 0; }
@@ -367,3 +393,41 @@ html, body {
 .sy-copy.ok { background: var(--green); border-color: var(--green); color: #fff; }
 .ctl-reset.ok { background: var(--green); border-color: var(--green); color: #fff; }
 .ctl-sync .ctl-reset { margin-bottom: 5px; }
+
+/* -------------------------------------------------------------- phone shell
+   The dense apps (Mail, Calendar, Slack, Chrome) stay desktop-shaped — they
+   are driven on laptops in facilitated sessions. This only makes the frame
+   around them survive a 390px screen, so the 8 Ball is usable on a phone. */
+@media (max-width: 640px) {
+  :root { --dock-h: 66px; }
+
+  #desktop { height: 100dvh; }   /* fixed+inset resolves to the LARGE viewport
+                                    on iOS, hiding the dock under the toolbar */
+
+  #menubar { gap: 8px; padding: 0 9px; font-size: 11px; }
+  .mb-left, .mb-right { gap: 9px; min-width: 0; }
+  .mb-item { display: none; }
+  .mb-app { white-space: nowrap; }
+  .ps-btn { font-size: 11px; padding: 2px 6px 2px 2px; }
+  .ps-name { display: none; }
+
+  #window-layer {
+    padding: 8px 8px calc(var(--dock-h) + env(safe-area-inset-bottom) + 8px);
+  }
+  .win {
+    top: 8px; left: 8px; right: 8px;
+    bottom: calc(var(--dock-h) + env(safe-area-inset-bottom) + 8px);
+    border-radius: 12px;
+  }
+
+  #dock {
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    gap: 4px; padding: 5px 7px; border-radius: 16px;
+  }
+  .dock-app { padding: 0 1px 5px; }
+  .dock-app:hover { transform: none; }
+  .dock-icon { width: 44px; height: 44px; }
+  .dock-label { display: none; }
+
+  #notif-stack { left: 8px; right: 8px; width: auto; }
+}

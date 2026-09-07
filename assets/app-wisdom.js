@@ -239,6 +239,44 @@
 
     '@media (max-width:1080px){.w8-card{width:268px;}}',
 
+    /* ---- phone: one scrolling column, nothing pinned over the text ----
+       justify-content:center is the bug on a short screen — a centred flex
+       column overflows past its start edge, and that overflow can never be
+       scrolled to. flex-start plus real padding makes the whole thing scroll
+       top to bottom. The note, the cake and the ribbon leave absolute
+       positioning and join the column, so they cannot cover the answer. */
+    '@media (max-width:640px){',
+      '.w8-root{justify-content:flex-start;padding:18px 14px 32px;',
+        'overscroll-behavior:contain;-webkit-tap-highlight-color:transparent;}',
+      /* Without this the children shrink and clip their own content instead
+         of overflowing, so the root never becomes scrollable and the note
+         buries the Ask again button. */
+      '.w8-root>*{flex:0 0 auto;}',
+      '.w8-glow{animation:none;}',
+      '.w8-title{font-size:32px;}',
+      '.w8-prompt{margin-top:8px;font-size:13px;}',
+      '.w8-stage{margin-top:12px;}',
+      '.w8-ball{width:200px;height:200px;',
+        'box-shadow:0 26px 48px -12px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.07),',
+        'inset 0 -22px 46px rgba(120,60,180,.34);}',
+      '.w8-ball:hover{transform:none;}',
+      '.w8-win{width:88px;height:88px;}',
+      '.w8-eight span{font-size:54px;}',
+      '.w8-tri{width:74px;height:64px;}',
+      '.w8-tri em{width:40px;font-size:6.6px;}',
+      '.w8-read{margin-top:16px;min-height:0;max-width:100%;}',
+      '.w8-quote{font-size:19px;line-height:1.36;}',
+      '.w8-pod{margin-top:14px;font-size:13px;}',
+      '.w8-src{margin-top:8px;max-width:100%;font-size:9px;}',
+      '.w8-again{margin-top:18px;padding:14px 26px;}',
+      '.w8-count{margin-top:12px;}',
+      '.w8-card{position:static;order:2;width:100%;max-width:340px;',
+        'margin:20px auto 0;padding:18px 18px 16px;}',
+      '.w8-card:not(.on){display:none;}',
+      '.w8-card::after{display:none;}',
+      '.w8-cake{position:static;order:3;margin:18px 0 0;width:44px;height:44px;}',
+      '.w8-ribbon{position:static;order:4;margin:16px 0 0;}}',
+
     /* ---- respect a stilled OS ---- */
     '@media (prefers-reduced-motion:reduce){',
       '.w8-glow{animation:none;}',
@@ -312,10 +350,23 @@
   }
 
   /* ------------------------------------------------------------------ paint */
-  function paint() {
+  /* Everything in the world fans out to app.render(): a beat pushed from the
+     facilitator's laptop (sync.js), a persona toggle, a dock click, a tapped
+     notification, even a Slack timer firing 2.5s after you left. None of it
+     changes what this view draws — so rebuilding innerHTML would only replay
+     w8rise on the answer, restart the 22s glow drift and reset the scroll: a
+     "refresh" nobody asked for. Repaint only when the drawn content changed.
+     cardOpen is NOT in the signature on purpose — setCard() writes it straight
+     to the DOM, so counting it here would make every toggle repaint. */
+  var sig = null;
+
+  function paint(force) {
     if (!root) return;
     var d = D();
     var total = (d.wisdom || []).length;
+    var next = phase + '|' + (current ? current.id : '-') + '|' + drawn + '|' + total;
+    if (!force && sig === next && root.firstChild) return;
+    sig = next;
     root.dataset.phase = phase;
 
     var answered = phase === 'answered' && current;
@@ -418,7 +469,13 @@
     }
     if (cake) cake.hidden = open;
     var focus = open ? card && card.querySelector('.w8-card-x') : cake;
-    if (focus) focus.focus({ preventScroll: true });
+    if (focus) {
+      // .w8-root is overflow:hidden auto and is the card's offsetParent, so on
+      // engines that ignore preventScroll, focusing here scrolls the ball away.
+      var top = root.scrollTop;
+      focus.focus({ preventScroll: true });
+      if (root.scrollTop !== top) root.scrollTop = top;
+    }
   }
 
   /* Escape closes the note before it closes the window. */

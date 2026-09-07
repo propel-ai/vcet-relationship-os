@@ -151,6 +151,7 @@
     if (e.key.toLowerCase() === 'k' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); toggleController(); return; }
     if (e.key === 'Escape') {
       if (els.controller.classList.contains('on')) toggleController(false);
+      else if (W.dismissAll && W.dismissAll()) return;   // notifications first
       else W.closeWindow();
       return;
     }

@@ -231,7 +231,8 @@ window.VCET_APPS = window.VCET_APPS || {};
       notes.slice(0, 3).forEach((n, i) => setTimeout(() => notify(n), 380 * i + 220));
     },
 
-    notify
+    notify,
+    dismissAll
   };
 
   function stripTags(s) { return String(s || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(); }
@@ -248,6 +249,11 @@ window.VCET_APPS = window.VCET_APPS || {};
   function notify(n) {
     const stack = document.getElementById('notif-stack');
     if (!stack) return;
+    // The × is a SIBLING of the notification button, never a child: nested
+    // buttons are invalid HTML, and a sibling's click cannot bubble into the
+    // open-the-app handler at all.
+    const wrap = document.createElement('div');
+    wrap.className = 'notif-wrap';
     const el = document.createElement('button');
     el.className = 'notif';
     el.type = 'button';
@@ -265,7 +271,19 @@ window.VCET_APPS = window.VCET_APPS || {};
       World.openWindow(n.app);
       dismiss(el);
     });
-    stack.appendChild(el);
+    const x = document.createElement('button');
+    x.className = 'notif-x';
+    x.type = 'button';
+    x.setAttribute('aria-label', 'Dismiss notification');
+    x.innerHTML = '&times;';
+    x.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      dismiss(el);
+    });
+    wrap.appendChild(x);
+    wrap.appendChild(el);
+    stack.appendChild(wrap);
     requestAnimationFrame(() => el.classList.add('in'));
     setTimeout(() => dismiss(el), 7200);
   }
@@ -274,7 +292,20 @@ window.VCET_APPS = window.VCET_APPS || {};
     if (!el || el.dataset.gone) return;
     el.dataset.gone = '1';
     el.classList.remove('in');
-    setTimeout(() => el.remove(), 260);
+    const wrap = el.parentElement && el.parentElement.classList.contains('notif-wrap')
+      ? el.parentElement : el;
+    wrap.style.pointerEvents = 'none';   // no re-hovering a fading card
+    setTimeout(() => wrap.remove(), 260);
+  }
+
+  /* Clear the stack. DOM only — deliberately emits no 'change', so dismissing
+     can never repaint whichever app is open. Returns how many were live. */
+  function dismissAll() {
+    const stack = document.getElementById('notif-stack');
+    if (!stack) return 0;
+    const live = stack.querySelectorAll('.notif:not([data-gone])');
+    live.forEach(dismiss);
+    return live.length;
   }
 
   function esc(s) {
