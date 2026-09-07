@@ -7,7 +7,7 @@
   const W = window.VCET;
   const esc = W.esc;
 
-  const DOCK = ['mail', 'calendar', 'slack', 'web'];
+  const DOCK = ['mail', 'calendar', 'slack', 'web', 'wisdom'];
 
   let els = {};
 

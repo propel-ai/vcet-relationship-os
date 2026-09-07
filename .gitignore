@@ -5,3 +5,7 @@ node_modules/
 # artifacts. Kept locally for the build; deliberately NOT published to the
 # public Pages repo.
 ref/
+
+# Podcast audio and transcripts pulled down while researching the 8 Ball.
+# Third-party content, large, and this repo is served publicly by Pages.
+recordings/

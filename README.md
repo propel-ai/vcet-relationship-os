@@ -18,6 +18,27 @@ Open the deployed URL. The prototype starts on **Monday 8:00 AM**.
 | Close a window | <kbd>Esc</kbd> or the red light |
 | Start over | "Reset" in the controller |
 
+There is a fifth app in the dock, after Chrome: **The Founder's 8 Ball by VCET** — a Magic
+8-Ball for Dave's birthday. Hold a question, shake the ball, and the blue triangle surfaces
+one of the twenty classic 8-Ball replies while the readout gives the Dave & Nicole version
+of it, plus a Start Here episode to go listen to. The cake in the bottom corner opens the
+note from the Propel team.
+
+It is not part of the story: no beat, no badge, no notifications. The answers are written
+*in* their voice, not quoted *from* them. The fifteen podcast links are real, verified
+episodes. Everything lives in [`data/wisdom.js`](data/wisdom.js).
+
+Chrome opens on a **new tab page** in the style of Momentum: a Vermont photograph, the
+prototype clock, a greeting, the one thing that matters today, a todo list, and one
+motivational line drawn from VCET's own material. Everything on it is clickable — tick a
+todo, add one, clear the day's focus, shuffle to a new quote, swap the photo, open the link
+tray — and everything stays local to whoever is looking. No beat, no badge, no sync.
+
+The quotes are verbatim, attributed, and sourced: seven from the VCET blog, three from the
+"Start Here" podcast (those name their episode and timestamp, and click out to it). They live in
+[`data/newtab.js`](data/newtab.js), which documents the sourcing rules, alongside the
+greeting, todos, weather and photo captions.
+
 ## Running it across three laptops
 
 Everyone opens their own copy and clicks freely in it; you drive the clock.
@@ -74,6 +95,7 @@ assets/desktop.js     menu bar, dock, window frame, hidden controller
 assets/sync.js        cross-machine clock sync for multi-laptop sessions
 assets/app-*.js       one module per app
 data/*.js             all seeded content, gated by beat
+data/newtab.js        the Chrome new tab page — photo, todos, quotes
 web/                  the Sam web surfaces (Warm Match, Pulse, Ask Sam)
 ref/                  source material — design references, not shipped behaviour
 ```

@@ -241,7 +241,8 @@ window.VCET_APPS = window.VCET_APPS || {};
     mail: { name: 'Mail', icon: 'mail' },
     calendar: { name: 'Calendar', icon: 'calendar' },
     slack: { name: 'Slack', icon: 'slack' },
-    web: { name: 'Chrome', icon: 'web' }
+    web: { name: 'Chrome', icon: 'web' },
+    wisdom: { name: 'Wisdom', icon: 'wisdom' }
   };
 
   function notify(n) {
@@ -288,7 +289,15 @@ window.VCET_APPS = window.VCET_APPS || {};
     mail: '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#F5F7F6"/><rect x="7" y="12" width="26" height="17" rx="3" fill="#fff" stroke="#8FA3B0" stroke-width="1.6"/><path d="M7.6 13.6 20 22l12.4-8.4" fill="none" stroke="#4A90D9" stroke-width="1.8" stroke-linecap="round"/></svg>',
     calendar: '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#fff"/><rect x="0" y="0" width="40" height="10" rx="9" fill="#E8503A"/><rect x="0" y="7" width="40" height="4" fill="#E8503A"/><text x="20" y="31" text-anchor="middle" font-family="Jost,sans-serif" font-size="17" font-weight="500" fill="#39424D">25</text></svg>',
     slack: '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#fff"/><g transform="translate(9 9) scale(0.196)"><path d="M23 76a15 15 0 1 1-15-15h15v15Zm7 0a15 15 0 0 1 30 0v38a15 15 0 0 1-30 0V76Z" fill="#E01E5A"/><path d="M45 23a15 15 0 1 1 15-15v15H45Zm0 7a15 15 0 0 1 0 30H7a15 15 0 0 1 0-30h38Z" fill="#36C5F0"/><path d="M98 45a15 15 0 1 1 15 15H98V45Zm-7 0a15 15 0 0 1-30 0V7a15 15 0 0 1 30 0v38Z" fill="#2EB67D"/><path d="M76 98a15 15 0 1 1-15 15V98h15Zm0-7a15 15 0 0 1 0-30h38a15 15 0 0 1 0 30H76Z" fill="#ECB22E"/></g></svg>',
-    web: '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#fff"/><circle cx="20" cy="20" r="11" fill="none" stroke="#5F6D80" stroke-width="1.6"/><ellipse cx="20" cy="20" rx="4.6" ry="11" fill="none" stroke="#5F6D80" stroke-width="1.4"/><path d="M9.6 16.4h20.8M9.6 23.6h20.8" stroke="#5F6D80" stroke-width="1.4"/><circle cx="20" cy="20" r="4" fill="#F37021"/></svg>'
+    web: '<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="#fff"/><circle cx="20" cy="20" r="11" fill="none" stroke="#5F6D80" stroke-width="1.6"/><ellipse cx="20" cy="20" rx="4.6" ry="11" fill="none" stroke="#5F6D80" stroke-width="1.4"/><path d="M9.6 16.4h20.8M9.6 23.6h20.8" stroke="#5F6D80" stroke-width="1.4"/><circle cx="20" cy="20" r="4" fill="#F37021"/></svg>',
+    wisdom: '<svg viewBox="0 0 40 40" aria-hidden="true"><defs>' +
+      '<radialGradient id="w8g" cx="34%" cy="26%" r="78%">' +
+        '<stop offset="0" stop-color="#4B4460"/><stop offset=".42" stop-color="#191526"/><stop offset="1" stop-color="#08060F"/>' +
+      '</radialGradient></defs>' +
+      '<rect width="40" height="40" rx="9" fill="url(#w8g)"/>' +
+      '<ellipse cx="14.5" cy="11" rx="5" ry="3.2" fill="#fff" opacity=".26" transform="rotate(-24 14.5 11)"/>' +
+      '<circle cx="20" cy="21.5" r="8.4" fill="#F4F2F8"/>' +
+      '<text x="20" y="27.4" text-anchor="middle" font-family="League Gothic,Haettenschweiler,sans-serif" font-size="16" fill="#12101A">8</text></svg>'
   };
   function appIcon(id) { return ICONS[id] || ''; }
   World.appIcon = appIcon;
