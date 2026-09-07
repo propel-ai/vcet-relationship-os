@@ -7,6 +7,18 @@ window.VCET_DATA.web = {
 
   /* ------------------------------------------------------------- the pages */
   pages: {
+    /* Chrome's default page — the Momentum-style dashboard. Content lives in
+       data/newtab.js; `omni` makes the address bar show Chrome's placeholder
+       instead of a URL. */
+    newtab: {
+      id: 'newtab',
+      url: '',
+      omni: 'Search Google or type a URL',
+      title: 'New Tab',
+      tab: 'New Tab',
+      fav: 'newtab',
+      docClass: 'nt-doc'
+    },
     home: {
       id: 'home',
       url: 'sam.vcet.co',

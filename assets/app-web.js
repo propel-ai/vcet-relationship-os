@@ -10,6 +10,7 @@
   var esc = W.esc;
 
   var D = function () { return window.VCET_DATA.web; };
+  var NT = function () { return window.VCET_DATA.newtab; };
   var PAGES = function () { return D().pages; };
 
   var root = null;          // the .win-body we were mounted into
@@ -215,6 +216,87 @@
     '.wb-hcard p{margin:0;font-size:14.5px;line-height:1.55;color:var(--slate2);}',
     '.wb-hcard em{display:block;margin-top:14px;font-style:normal;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage3);}',
 
+    /* ---- new tab (Momentum-style default page) ---- */
+    '.wb-doc.nt-doc{overflow:hidden;background:#1B2430;}',
+    '.nt{position:absolute;inset:0;overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;color:#fff;font-family:var(--body);font-weight:300;}',
+    '.nt-bg{position:absolute;inset:0;background-position:center;background-size:cover;z-index:0;}',
+    '.nt-scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(20,26,34,.40) 0%,rgba(20,26,34,.26) 30%,rgba(20,26,34,.30) 58%,rgba(20,26,34,.56) 100%);}',
+    '.nt.snow .nt-scrim{background:linear-gradient(180deg,rgba(20,26,34,.52) 0%,rgba(20,26,34,.44) 32%,rgba(20,26,34,.46) 58%,rgba(20,26,34,.66) 100%);}',
+    '.nt-top,.nt-mid,.nt-bot{position:relative;z-index:2;}',
+    '.nt button{font-family:inherit;color:inherit;font-weight:inherit;}',
+    '.nt-txt{text-shadow:0 1px 14px rgba(12,17,23,.42);}',
+    '.nt :focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:4px;box-shadow:0 0 0 4px rgba(12,17,23,.55);}',
+
+    /* top row */
+    '.nt-top{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px 0;}',
+    '.nt-linkwrap{position:relative;}',
+    '.nt-links{display:flex;align-items:center;gap:9px;border:0;background:none;cursor:pointer;padding:4px 2px;font-size:15px;letter-spacing:.01em;opacity:.92;text-shadow:0 1px 14px rgba(12,17,23,.42);}',
+    '.nt-links:hover{opacity:1;}',
+    '.nt-links svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;}',
+    '.nt-linktray{position:absolute;top:32px;left:0;min-width:216px;padding:7px;border-radius:10px;background:rgba(22,29,38,.82);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 18px 44px rgba(0,0,0,.34);display:none;}',
+    '.nt-linktray.on{display:block;}',
+    '.nt-linktray button{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;padding:8px 10px;border-radius:6px;font-size:13.5px;opacity:.9;}',
+    '.nt-linktray button:hover{background:rgba(255,255,255,.13);opacity:1;}',
+    '.nt-wx{display:flex;align-items:center;gap:10px;text-align:right;text-shadow:0 1px 14px rgba(12,17,23,.42);}',
+    '.nt-wx svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.95;}',
+    '.nt-wx b{display:block;font-size:23px;font-weight:300;line-height:1.05;}',
+    '.nt-wx span{display:block;font-size:11.5px;letter-spacing:.01em;}',
+
+    /* centre */
+    '.nt-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:0;padding:0 24px;}',
+    '.nt-clock{font-size:clamp(38px,5.6vw,62px);font-weight:300;line-height:1;letter-spacing:-.015em;text-shadow:0 2px 22px rgba(12,17,23,.4);}',
+    '.nt-greet{font-size:clamp(15px,1.9vw,21px);font-weight:300;line-height:1.2;margin-top:5px;opacity:.92;text-shadow:0 1px 16px rgba(12,17,23,.42);}',
+    '.nt-focus{margin-top:26px;text-align:center;}',
+    '.nt-focus-lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.8;margin:0 0 8px;}',
+    '.nt-focus-row{display:inline-flex;align-items:center;gap:12px;}',
+    '.nt-focus-btn{display:inline-flex;align-items:center;gap:12px;border:0;background:none;cursor:pointer;font-size:clamp(16px,1.9vw,21px);font-weight:300;padding:2px 4px;border-radius:6px;text-shadow:0 1px 16px rgba(12,17,23,.42);}',
+    '.nt-focus-btn:hover{background:rgba(255,255,255,.08);}',
+    '.nt-focus-btn.done span{text-decoration:line-through;opacity:.6;}',
+    '.nt-box{flex:0 0 16px;width:16px;height:16px;border:1.6px solid rgba(255,255,255,.85);border-radius:3px;display:grid;place-items:center;}',
+    '.nt-box svg{width:12px;height:12px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;opacity:0;}',
+    '.done .nt-box{background:rgba(255,255,255,.9);border-color:rgba(255,255,255,.9);}',
+    '.done .nt-box svg{stroke:#1B2430;opacity:1;}',
+    '.nt-focus-x{border:0;background:none;cursor:pointer;font-size:17px;opacity:.78;padding:2px 6px;line-height:1;}',
+    '.nt-focus-x:hover{opacity:.9;}',
+
+    /* bottom row */
+    '.nt-bot{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;padding:0 24px 16px;}',
+    '.nt-credit{display:flex;align-items:center;gap:9px;font-size:11.5px;opacity:.92;text-shadow:0 1px 12px rgba(12,17,23,.5);}',
+    '.nt-credit button{border:0;background:none;cursor:pointer;padding:0;display:grid;place-items:center;opacity:.85;}',
+    '.nt-credit button:hover{opacity:1;}',
+    '.nt-credit svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.6;}',
+    '.nt-quote{margin-top:min(6.5vh,58px);max-width:min(760px,88%);text-align:center;text-shadow:0 1px 16px rgba(12,17,23,.5);}',
+    '.nt-quote i{display:block;font-style:italic;font-size:clamp(19px,2.5vw,31px);font-weight:300;line-height:1.36;letter-spacing:.005em;}',
+    '.nt-quote em{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:0 7px;font-style:normal;font-size:12.5px;letter-spacing:.02em;opacity:.92;margin-top:14px;}',
+    '.nt-quote em button{border:0;background:none;cursor:pointer;padding:0 0 1px;font-size:12.5px;text-decoration:underline;text-decoration-color:rgba(255,255,255,.45);text-underline-offset:3px;}',
+    '.nt-quote em button:hover{text-decoration-color:#fff;}',
+    '.nt-shuffle{display:inline-flex;align-items:center;gap:6px;border:0;background:none;cursor:pointer;padding:3px 8px;margin-left:2px;border-radius:999px;font-size:11.5px;opacity:.72;}',
+    '.nt-shuffle:hover{background:rgba(255,255,255,.14);opacity:1;}',
+    '.nt-shuffle svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}',
+    '.nt-todotab{border:0;background:none;cursor:pointer;font-size:13px;opacity:.85;padding:2px 4px;text-shadow:0 1px 12px rgba(12,17,23,.5);}',
+    '.nt-todotab:hover{opacity:1;}',
+
+    /* todo card */
+    '.nt-todo{position:absolute;right:24px;bottom:52px;z-index:3;width:250px;max-height:min(56%,320px);display:flex;flex-direction:column;border-radius:9px;background:rgba(22,29,38,.72);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 20px 50px rgba(0,0,0,.34);overflow:hidden;}',
+    '.nt-todo[hidden]{display:none;}',
+    '.nt-todo-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:11px 13px 7px;font-size:13.5px;}',
+    '.nt-todo-head span{opacity:.55;letter-spacing:.08em;}',
+    '.nt-todo-list{flex:1 1 auto;min-height:0;overflow-y:auto;padding:2px 6px 4px;list-style:none;margin:0;}',
+    '.nt-todo-list::-webkit-scrollbar{width:8px;}',
+    '.nt-todo-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:5px;border:2px solid transparent;background-clip:padding-box;}',
+    '.nt-todo-list li{margin:0;}',
+    '.nt-todo-list button{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;border:0;background:none;cursor:pointer;padding:6px 7px;border-radius:5px;font-size:12.5px;line-height:1.35;overflow-wrap:anywhere;}',
+    '.nt-todo-list button:hover{background:rgba(255,255,255,.1);}',
+    '.nt-todo-list .nt-box{flex:0 0 13px;width:13px;height:13px;border-width:1.4px;border-radius:2.5px;margin-top:1px;}',
+    '.nt-todo-list .nt-box svg{width:9px;height:9px;stroke-width:2.8;}',
+    '.nt-todo-list button.done span{text-decoration:line-through;opacity:.5;}',
+    '.nt-todo-new{flex:0 0 auto;padding:4px 13px 12px;}',
+    '.nt-todo-new input{width:100%;border:0;background:none;color:#fff;font-family:var(--body);font-weight:300;font-size:12.5px;padding:4px 0;outline:0;}',
+    '.nt-todo-new input::placeholder{color:rgba(255,255,255,.5);}',
+    '.nt-todo-new input:focus{border-bottom:1px solid rgba(255,255,255,.45);}',
+
+    '@media (max-height:600px){.nt-focus{margin-top:16px;}.nt-quote{margin-top:24px;}.nt-quote i{font-size:clamp(17px,2.1vw,23px);}.nt-todo{max-height:46%;}}',
+
     /* ---- toast ---- */
     '.wb-toast{position:absolute;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:20;max-width:560px;display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:8px;background:rgba(30,38,43,.95);color:#fff;font-size:14px;line-height:1.4;box-shadow:0 12px 34px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;}',
     '.wb-toast.on{opacity:1;transform:translate(-50%,0);}',
@@ -236,6 +318,7 @@
     sam: '<svg viewBox="0 0 16 16"><rect width="16" height="16" rx="3.5" fill="#272E37"/><circle cx="8" cy="8" r="3.2" fill="#F37021"/></svg>',
     hubspot: '<svg viewBox="0 0 16 16"><rect width="16" height="16" rx="3.5" fill="#FF7A59"/><circle cx="10.4" cy="8" r="2.6" fill="none" stroke="#fff" stroke-width="1.5"/><path d="M5 4v4.2" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/><circle cx="5" cy="3.4" r="1.3" fill="#fff"/></svg>',
     mailchimp: '<svg viewBox="0 0 16 16"><rect width="16" height="16" rx="3.5" fill="#FFE01B"/><circle cx="6" cy="7" r="1.1" fill="#241C15"/><circle cx="10" cy="7" r="1.1" fill="#241C15"/><path d="M5.4 10.4c1.6 1.4 3.6 1.4 5.2 0" stroke="#241C15" stroke-width="1.3" fill="none" stroke-linecap="round"/></svg>',
+    newtab: '<svg viewBox="0 0 16 16"><rect width="16" height="16" rx="3.5" fill="#DEE1E6"/><circle cx="8" cy="8" r="3" fill="none" stroke="#9AA0A6" stroke-width="1.6"/></svg>',
     vcet: '<svg viewBox="0 0 16 16"><rect width="16" height="16" rx="3.5" fill="#EDF2F0"/><path d="M3.4 4.2 8 12l4.6-7.8" fill="none" stroke="#F37021" stroke-width="2" stroke-linejoin="round"/></svg>'
   };
   function fav(k) { return FAVS[k] || FAVS.sam; }
@@ -274,6 +357,7 @@
     els.prof = root.querySelector('#wb-prof');
     els.bm = root.querySelector('#wb-bm');
     els.view = root.querySelector('#wb-viewport');
+    els.lock = root.querySelector('.wb-lock');
     els.toast = root.querySelector('#wb-toast');
 
     /* bookmarks */
@@ -295,19 +379,19 @@
       if (x) { closeTab(+x.dataset.close); return; }
       var t = e.target.closest('[data-tab]');
       if (t) { activeUid = +t.dataset.tab; paint(); return; }
-      if (e.target.closest('#wb-newtab')) { openTab('home'); }
+      if (e.target.closest('#wb-newtab')) { openTab('newtab'); }
     });
 
     root.querySelector('.wb-toolbar').addEventListener('click', function (e) {
       var n = e.target.closest('[data-nav]');
       if (!n) return;
-      if (n.dataset.nav === 'reload') { toast('Reloaded ' + curPage().url); }
+      if (n.dataset.nav === 'reload') { toast('Reloaded ' + (curPage().url || 'New Tab')); }
       else if (n.dataset.nav === 'back') { back(); }
       else { toast('Nothing forward in history.'); }
     });
 
     mounted = true;
-    if (!tabs.length) openTab('home');
+    if (!tabs.length) openTab('newtab');
   }
 
   /* =========================================================== tabs */
@@ -340,7 +424,7 @@
     if (i < 0) return;
     if (tabs[i].pane) tabs[i].pane.remove();
     tabs.splice(i, 1);
-    if (!tabs.length) { openTab('home'); return; }
+    if (!tabs.length) { openTab('newtab'); return; }
     if (activeUid === uid) activeUid = tabs[Math.max(0, i - 1)].uid;
     paint();
   }
@@ -398,9 +482,13 @@
     var url = p.url;
     if (t && t.page === 'contact') url = 'sam.vcet.co/c/' + (t.slug || '');
     var slash = url.indexOf('/');
-    els.url.innerHTML = slash < 0
-      ? '<b>' + esc(url) + '</b>'
-      : '<b>' + esc(url.slice(0, slash)) + '</b><span>' + esc(url.slice(slash)) + '</span>';
+    /* the default page shows Chrome's placeholder, not a URL */
+    els.url.innerHTML = p.omni
+      ? '<span>' + esc(p.omni) + '</span>'
+      : (slash < 0
+        ? '<b>' + esc(url) + '</b>'
+        : '<b>' + esc(url.slice(0, slash)) + '</b><span>' + esc(url.slice(slash)) + '</span>');
+    if (els.lock) els.lock.style.visibility = p.omni ? 'hidden' : '';
 
     var persona = W.persona;
     els.prof.textContent = persona.initials;
@@ -461,7 +549,7 @@
       pane.appendChild(f);
     } else {
       var doc = document.createElement('div');
-      doc.className = 'wb-doc';
+      doc.className = 'wb-doc' + (p.docClass ? ' ' + p.docClass : '');
       doc.innerHTML = renderPage(t);
       wire(doc, t);
       pane.appendChild(doc);
@@ -472,10 +560,216 @@
   }
 
   function renderPage(t) {
+    if (t.page === 'newtab') return pageNewTab(t);
     if (t.page === 'premeeting') return pagePremeeting();
     if (t.page === 'inbound') return pageInbound();
     if (t.page === 'contact') return pageContact(t.slug);
     return pageHome();
+  }
+
+  /* ---------------------------------------------------------- new tab */
+  /* Chrome's default page. A Momentum-style dashboard: the prototype clock,
+     a Vermont photo, the one thing that matters today, and one verbatim line
+     from VCET's own podcast or blog (data/newtab.js). Everything on it is
+     local to whoever is looking — nothing here syncs or fires a beat. */
+
+  var NTS = {
+    photo: 0,
+    tray: false,
+    todoOpen: true,
+    done: {},        // "persona:id" -> bool, seeded from the data on first read
+    focusDone: {},   // persona -> bool
+    focusGone: {},   // persona -> bool
+    extra: {}        // persona -> [{id,text,done}]
+  };
+
+  var ntSeq = 0;
+
+  var SHUFFLE = '<svg viewBox="0 0 24 24"><path d="M3 7h4.2l3.1 4M3 17h4.2l3.1-4"/>' +
+    '<path d="M14.6 7H21m0 0-2.6-2.6M21 7l-2.6 2.6M14.6 17H21m0 0-2.6-2.6M21 17l-2.6 2.6"/></svg>';
+
+  var TICK = '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></svg>';
+
+  function ntPersonaKey() { return W.persona.id; }
+
+  function ntTodos() {
+    var pid = ntPersonaKey();
+    var seeded = ((NT().todos || {})[pid] || []).map(function (x) {
+      var k = pid + ':' + x.id;
+      if (!(k in NTS.done)) NTS.done[k] = !!x.done;
+      return { id: x.id, text: x.text, done: NTS.done[k] };
+    });
+    return seeded.concat(NTS.extra[pid] || []);
+  }
+
+  function ntSetDone(id, on) {
+    var pid = ntPersonaKey(), list = NTS.extra[pid] || [], i;
+    for (i = 0; i < list.length; i++) if (list[i].id === id) { list[i].done = on; return; }
+    NTS.done[pid + ':' + id] = on;
+  }
+
+  function ntGreeting() {
+    var clock = (W.beat && W.beat.clock) || '8:00 AM';
+    var pm = clock.indexOf('PM') > -1;
+    var hr = parseInt(clock, 10) || 8;
+    var h24 = pm ? (hr === 12 ? 12 : hr + 12) : (hr === 12 ? 0 : hr);
+    var part = h24 < 12 ? 'morning' : (h24 < 17 ? 'afternoon' : 'evening');
+    return 'Good ' + part + ', ' + W.persona.first;
+  }
+
+  function ntClock() {
+    return String((W.beat && W.beat.clock) || '8:00 AM').replace(/\s*[AP]M$/, '');
+  }
+
+  function ntWeather() {
+    var w = NT().weather;
+    if (!w) return null;
+    return (w.byBeat || {})[(W.beat && W.beat.id) || ''] || w.fallback;
+  }
+
+  var SKY = {
+    sun: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.6v2.2M12 19.2v2.2M2.6 12h2.2M19.2 12h2.2M5.4 5.4l1.6 1.6M17 17l1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6"/></svg>',
+    cloud: '<svg viewBox="0 0 24 24"><path d="M7.4 18.4h9.9a3.6 3.6 0 0 0 .3-7.2 5.4 5.4 0 0 0-10.4-1.3 3.8 3.8 0 0 0 .2 8.5Z"/></svg>'
+  };
+
+  /* One quote per tab, so every new tab is a fresh line but a repaint is not. */
+  function ntQuote(t) {
+    var list = NT().quotes;
+    if (!list.length) return null;
+    if (t.ntq === undefined || t.ntq >= list.length) {
+      t.ntq = Math.floor(Math.random() * list.length);
+    }
+    return list[t.ntq];
+  }
+
+  /* Shuffle picks a line the reader is not already looking at. */
+  function ntShuffle(t) {
+    var n = (NT().quotes || []).length;
+    if (n < 2) return;
+    var next = t.ntq;
+    while (next === t.ntq) next = Math.floor(Math.random() * n);
+    t.ntq = next;
+  }
+
+  function pageNewTab(t) {
+    var d = NT();
+    if (!d || !d.photos || !d.photos.length) return '';
+    var photo = d.photos[NTS.photo % d.photos.length];
+    var pid = ntPersonaKey();
+    var wx = ntWeather() || { temp: '--', sky: 'cloud' };
+    var q = ntQuote(t);
+    var focus = (d.focus || {})[pid] || '';
+    var fDone = !!NTS.focusDone[pid];
+
+    var links = (d.links || []).map(function (l, i) {
+      return '<button type="button" data-ntlink="' + i + '">' + esc(l.label) + '</button>';
+    }).join('');
+
+    var todos = ntTodos().map(function (x) {
+      return '<li><button type="button" data-nttodo="' + esc(x.id) + '" class="' + (x.done ? 'done' : '') + '"' +
+        ' role="checkbox" aria-checked="' + (x.done ? 'true' : 'false') + '">' +
+        '<i class="nt-box">' + TICK + '</i><span>' + esc(x.text) + '</span></button></li>';
+    }).join('');
+
+    var attrib = '';
+    if (q) {
+      attrib = '<span>— ' + esc(q.who) + (q.org ? ', ' + esc(q.org) : '') + ' ·</span> ';
+      attrib += q.kind === 'podcast'
+        ? '<button type="button" data-ntep="' + esc(q.link || '') + '" data-ntsrc="' + esc(q.source) + '"' +
+            ' title="' + esc(q.source) + '">Start Here podcast' +
+            (q.at ? ' · ' + esc(q.at) : '') + '</button>'
+        : '<span>' + esc(q.source) + '</span>';
+      attrib += '<button type="button" class="nt-shuffle" data-nt="shuffle" ' +
+        'aria-label="Show another quote" title="Another quote">' + SHUFFLE + '<span>New quote</span></button>';
+    }
+
+    return '<div class="nt ' + esc(photo.tone) + '">' +
+      '<div class="nt-bg" style="background-image:url(&quot;' + esc(encodeURI(photo.src)) + '&quot;)"></div>' +
+      '<div class="nt-scrim"></div>' +
+
+      '<div class="nt-top">' +
+        '<div class="nt-linkwrap">' +
+          '<button type="button" class="nt-links" data-nt="links" aria-expanded="' + (NTS.tray ? 'true' : 'false') + '">' +
+            '<span>Links</span>' +
+            '<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.4"/><path d="m15.8 15.8 4 4"/></svg>' +
+          '</button>' +
+          '<div class="nt-linktray' + (NTS.tray ? ' on' : '') + '" data-nt="tray">' + links + '</div>' +
+        '</div>' +
+        '<div class="nt-wx">' + (SKY[wx.sky] || SKY.cloud) +
+          '<span><b>' + esc(wx.temp) + '°</b><span>' + esc((d.weather || {}).place || '') + '</span></span>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="nt-mid">' +
+        '<div class="nt-clock">' + esc(ntClock()) + '</div>' +
+        '<div class="nt-greet">' + esc(ntGreeting()) + '</div>' +
+        (focus && !NTS.focusGone[pid]
+          ? '<div class="nt-focus">' +
+              '<p class="nt-focus-lab">Today</p>' +
+              '<span class="nt-focus-row">' +
+                '<button type="button" class="nt-focus-btn' + (fDone ? ' done' : '') + '" data-nt="focus"' +
+                  ' role="checkbox" aria-checked="' + (fDone ? 'true' : 'false') + '">' +
+                  '<i class="nt-box">' + TICK + '</i><span>' + esc(focus) + '</span>' +
+                '</button>' +
+                '<button type="button" class="nt-focus-x" data-nt="focus-x" aria-label="Clear today’s focus">×</button>' +
+              '</span>' +
+            '</div>'
+          : '') +
+        (q ? '<div class="nt-quote"><i>“' + esc(q.q) + '”</i><em>' + attrib + '</em></div>' : '') +
+      '</div>' +
+
+      '<div class="nt-bot">' +
+        '<div class="nt-credit">' +
+          '<button type="button" data-nt="photo" aria-label="Next photo">' +
+            '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.6"/><path d="M10.2 3.6h3.6l.5 2.3 2 1.2 2.2-.8 1.8 3.1-1.7 1.6v2.3l1.7 1.6-1.8 3.1-2.2-.8-2 1.2-.5 2.3h-3.6l-.5-2.3-2-1.2-2.2.8-1.8-3.1 1.7-1.6v-2.3L3.5 9.4l1.8-3.1 2.2.8 2-1.2z"/></svg>' +
+          '</button>' +
+          '<span>' + esc(photo.caption) + '</span>' +
+        '</div>' +
+        '<button type="button" class="nt-todotab" data-nt="todotab">Todo</button>' +
+      '</div>' +
+
+      '<div class="nt-todo" data-nt="todo"' + (NTS.todoOpen ? '' : ' hidden') + '>' +
+        '<div class="nt-todo-head"><b>Today</b><span>···</span></div>' +
+        '<ul class="nt-todo-list">' + todos + '</ul>' +
+        '<div class="nt-todo-new"><input type="text" data-nt="new" placeholder="New Todo" ' +
+          'aria-label="Add a todo" autocomplete="off"></div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  /* Repaint just the new-tab panes — the clock, greeting and todos all move
+     when the facilitator changes the beat or flips persona. */
+  function refreshNewTabs() {
+    /* The repaint throws away every node, so a keyboard user ticking todos
+       would lose focus to <body> on each one. Remember what was focused and
+       put it back. */
+    var a = document.activeElement;
+    var sel = null;
+    if (a && a.dataset) {
+      if (a.dataset.nttodo) sel = '[data-nttodo="' + a.dataset.nttodo + '"]';
+      else if (a.dataset.nt) sel = '[data-nt="' + a.dataset.nt + '"]';
+    }
+
+    for (var i = 0; i < tabs.length; i++) {
+      var t = tabs[i];
+      if (t.page !== 'newtab' || !t.pane) continue;
+      var doc = t.pane.querySelector('.wb-doc');
+      if (!doc) continue;
+      var held = sel && doc.contains(a);
+      /* 'change' fires on flags and markSeen too, so a repaint can land while
+         someone is mid-sentence in the todo field. Carry the draft over. */
+      var box = doc.querySelector('[data-nt="new"]');
+      var draft = box ? box.value : '';
+
+      doc.innerHTML = pageNewTab(t);
+
+      box = doc.querySelector('[data-nt="new"]');
+      if (box && draft) box.value = draft;
+      if (held) {
+        var back = doc.querySelector(sel);
+        if (back) back.focus();
+      }
+    }
   }
 
   /* ------------------------------------------------------------ home */
@@ -808,6 +1102,8 @@
 
   /* =========================================================== wiring */
   function wire(doc, t) {
+    if (t.page === 'newtab') return wireNewTab(doc, t);
+
     doc.addEventListener('click', function (e) {
       var el;
 
@@ -875,6 +1171,80 @@
     });
   }
 
+  /* ------------------------------------------------- new tab interactions */
+  function wireNewTab(doc, t) {
+    doc.addEventListener('click', function (e) {
+      var pid = ntPersonaKey(), el;
+
+      el = e.target.closest('[data-nt="links"]');
+      if (el) {
+        NTS.tray = !NTS.tray;
+        el.setAttribute('aria-expanded', NTS.tray ? 'true' : 'false');
+        doc.querySelector('[data-nt="tray"]').classList.toggle('on', NTS.tray);
+        return;
+      }
+
+      el = e.target.closest('[data-ntlink]');
+      if (el) {
+        var l = (NT().links || [])[+el.dataset.ntlink];
+        if (!l) return;
+        NTS.tray = false;
+        if (l.page) { navInPlace(l.page, null); }
+        else { toast('External site — out of scope for the prototype. ' + l.ext); }
+        /* go() may just switch to an existing tab and leave this pane intact,
+           so repaint either way — otherwise the tray stays open in it. */
+        refreshNewTabs();
+        return;
+      }
+
+      el = e.target.closest('[data-nt="focus"]');
+      if (el) { NTS.focusDone[pid] = !NTS.focusDone[pid]; refreshNewTabs(); return; }
+
+      el = e.target.closest('[data-nt="focus-x"]');
+      if (el) { NTS.focusGone[pid] = true; refreshNewTabs(); return; }
+
+      el = e.target.closest('[data-nttodo]');
+      if (el) {
+        ntSetDone(el.dataset.nttodo, !el.classList.contains('done'));
+        refreshNewTabs();
+        return;
+      }
+
+      el = e.target.closest('[data-nt="todotab"]');
+      if (el) { NTS.todoOpen = !NTS.todoOpen; refreshNewTabs(); return; }
+
+      el = e.target.closest('[data-nt="shuffle"]');
+      if (el) { ntShuffle(t); refreshNewTabs(); return; }
+
+      el = e.target.closest('[data-nt="photo"]');
+      if (el) { NTS.photo++; refreshNewTabs(); return; }
+
+      el = e.target.closest('[data-ntep]');
+      if (el) {
+        toast(el.dataset.ntsrc + ' — the episode lives on vcet.co, which is out of scope for the prototype.');
+        return;
+      }
+
+      /* a click anywhere else closes the link tray */
+      if (NTS.tray) { NTS.tray = false; refreshNewTabs(); }
+    });
+
+    doc.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter') return;
+      var inp = e.target.closest('[data-nt="new"]');
+      if (!inp) return;
+      var text = inp.value.trim().slice(0, 120);
+      if (!text) return;
+      var pid = ntPersonaKey();
+      NTS.extra[pid] = NTS.extra[pid] || [];
+      NTS.extra[pid].push({ id: 'x' + (++ntSeq), text: text, done: false });
+      inp.value = '';
+      refreshNewTabs();
+      var next = doc.querySelector('[data-nt="new"]');
+      if (next) next.focus();
+    });
+  }
+
   var toastT = null;
   function toast(msg) {
     if (!els.toast) return;
@@ -896,9 +1266,11 @@
       if (c > -1) { slug = page.slice(c + 1); page = page.slice(0, c); }
       if (!PAGES()[page]) page = 'home';
       go(page, slug, true);
+      refreshNewTabs();
       return;
     }
     paint();
+    refreshNewTabs();
   }
 
   window.VCET_APPS.web = {
