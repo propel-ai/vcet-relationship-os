@@ -273,29 +273,9 @@
     '.nt-shuffle{display:inline-flex;align-items:center;gap:6px;border:0;background:none;cursor:pointer;padding:3px 8px;margin-left:2px;border-radius:999px;font-size:11.5px;opacity:.72;}',
     '.nt-shuffle:hover{background:rgba(255,255,255,.14);opacity:1;}',
     '.nt-shuffle svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}',
-    '.nt-todotab{border:0;background:none;cursor:pointer;font-size:13px;opacity:.85;padding:2px 4px;text-shadow:0 1px 12px rgba(12,17,23,.5);}',
-    '.nt-todotab:hover{opacity:1;}',
 
-    /* todo card */
-    '.nt-todo{position:absolute;right:24px;bottom:52px;z-index:3;width:250px;max-height:min(56%,320px);display:flex;flex-direction:column;border-radius:9px;background:rgba(22,29,38,.72);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);box-shadow:0 20px 50px rgba(0,0,0,.34);overflow:hidden;}',
-    '.nt-todo[hidden]{display:none;}',
-    '.nt-todo-head{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:11px 13px 7px;font-size:13.5px;}',
-    '.nt-todo-head span{opacity:.55;letter-spacing:.08em;}',
-    '.nt-todo-list{flex:1 1 auto;min-height:0;overflow-y:auto;padding:2px 6px 4px;list-style:none;margin:0;}',
-    '.nt-todo-list::-webkit-scrollbar{width:8px;}',
-    '.nt-todo-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:5px;border:2px solid transparent;background-clip:padding-box;}',
-    '.nt-todo-list li{margin:0;}',
-    '.nt-todo-list button{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;border:0;background:none;cursor:pointer;padding:6px 7px;border-radius:5px;font-size:12.5px;line-height:1.35;overflow-wrap:anywhere;}',
-    '.nt-todo-list button:hover{background:rgba(255,255,255,.1);}',
-    '.nt-todo-list .nt-box{flex:0 0 13px;width:13px;height:13px;border-width:1.4px;border-radius:2.5px;margin-top:1px;}',
-    '.nt-todo-list .nt-box svg{width:9px;height:9px;stroke-width:2.8;}',
-    '.nt-todo-list button.done span{text-decoration:line-through;opacity:.5;}',
-    '.nt-todo-new{flex:0 0 auto;padding:4px 13px 12px;}',
-    '.nt-todo-new input{width:100%;border:0;background:none;color:#fff;font-family:var(--body);font-weight:300;font-size:12.5px;padding:4px 0;outline:0;}',
-    '.nt-todo-new input::placeholder{color:rgba(255,255,255,.5);}',
-    '.nt-todo-new input:focus{border-bottom:1px solid rgba(255,255,255,.45);}',
 
-    '@media (max-height:600px){.nt-focus{margin-top:16px;}.nt-quote{margin-top:24px;}.nt-quote i{font-size:clamp(17px,2.1vw,23px);}.nt-todo{max-height:46%;}}',
+    '@media (max-height:600px){.nt-focus{margin-top:16px;}.nt-quote{margin-top:24px;}.nt-quote i{font-size:clamp(17px,2.1vw,23px);}}',
 
     /* ---- toast ---- */
     '.wb-toast{position:absolute;left:50%;bottom:26px;transform:translate(-50%,14px);z-index:20;max-width:560px;display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:8px;background:rgba(30,38,43,.95);color:#fff;font-size:14px;line-height:1.4;box-shadow:0 12px 34px rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;}',
@@ -579,14 +559,9 @@
   var NTS = {
     photo: 0,
     tray: false,
-    todoOpen: true,
-    done: {},        // "persona:id" -> bool, seeded from the data on first read
     focusDone: {},   // persona -> bool
-    focusGone: {},   // persona -> bool
-    extra: {}        // persona -> [{id,text,done}]
+    focusGone: {}    // persona -> bool
   };
-
-  var ntSeq = 0;
 
   var SHUFFLE = '<svg viewBox="0 0 24 24"><path d="M3 7h4.2l3.1 4M3 17h4.2l3.1-4"/>' +
     '<path d="M14.6 7H21m0 0-2.6-2.6M21 7l-2.6 2.6M14.6 17H21m0 0-2.6-2.6M21 17l-2.6 2.6"/></svg>';
@@ -594,22 +569,6 @@
   var TICK = '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></svg>';
 
   function ntPersonaKey() { return W.persona.id; }
-
-  function ntTodos() {
-    var pid = ntPersonaKey();
-    var seeded = ((NT().todos || {})[pid] || []).map(function (x) {
-      var k = pid + ':' + x.id;
-      if (!(k in NTS.done)) NTS.done[k] = !!x.done;
-      return { id: x.id, text: x.text, done: NTS.done[k] };
-    });
-    return seeded.concat(NTS.extra[pid] || []);
-  }
-
-  function ntSetDone(id, on) {
-    var pid = ntPersonaKey(), list = NTS.extra[pid] || [], i;
-    for (i = 0; i < list.length; i++) if (list[i].id === id) { list[i].done = on; return; }
-    NTS.done[pid + ':' + id] = on;
-  }
 
   function ntGreeting() {
     var clock = (W.beat && W.beat.clock) || '8:00 AM';
@@ -668,12 +627,6 @@
       return '<button type="button" data-ntlink="' + i + '">' + esc(l.label) + '</button>';
     }).join('');
 
-    var todos = ntTodos().map(function (x) {
-      return '<li><button type="button" data-nttodo="' + esc(x.id) + '" class="' + (x.done ? 'done' : '') + '"' +
-        ' role="checkbox" aria-checked="' + (x.done ? 'true' : 'false') + '">' +
-        '<i class="nt-box">' + TICK + '</i><span>' + esc(x.text) + '</span></button></li>';
-    }).join('');
-
     var attrib = '';
     if (q) {
       attrib = '<span>— ' + esc(q.who) + (q.org ? ', ' + esc(q.org) : '') + ' ·</span> ';
@@ -728,14 +681,6 @@
           '</button>' +
           '<span>' + esc(photo.caption) + '</span>' +
         '</div>' +
-        '<button type="button" class="nt-todotab" data-nt="todotab">Todo</button>' +
-      '</div>' +
-
-      '<div class="nt-todo" data-nt="todo"' + (NTS.todoOpen ? '' : ' hidden') + '>' +
-        '<div class="nt-todo-head"><b>Today</b><span>···</span></div>' +
-        '<ul class="nt-todo-list">' + todos + '</ul>' +
-        '<div class="nt-todo-new"><input type="text" data-nt="new" placeholder="New Todo" ' +
-          'aria-label="Add a todo" autocomplete="off"></div>' +
       '</div>' +
     '</div>';
   }
@@ -749,8 +694,7 @@
     var a = document.activeElement;
     var sel = null;
     if (a && a.dataset) {
-      if (a.dataset.nttodo) sel = '[data-nttodo="' + a.dataset.nttodo + '"]';
-      else if (a.dataset.nt) sel = '[data-nt="' + a.dataset.nt + '"]';
+      if (a.dataset.nt) sel = '[data-nt="' + a.dataset.nt + '"]';
     }
 
     for (var i = 0; i < tabs.length; i++) {
@@ -759,15 +703,9 @@
       var doc = t.pane.querySelector('.wb-doc');
       if (!doc) continue;
       var held = sel && doc.contains(a);
-      /* 'change' fires on flags and markSeen too, so a repaint can land while
-         someone is mid-sentence in the todo field. Carry the draft over. */
-      var box = doc.querySelector('[data-nt="new"]');
-      var draft = box ? box.value : '';
 
       doc.innerHTML = pageNewTab(t);
 
-      box = doc.querySelector('[data-nt="new"]');
-      if (box && draft) box.value = draft;
       if (held) {
         var back = doc.querySelector(sel);
         if (back) back.focus();
@@ -1206,16 +1144,6 @@
       el = e.target.closest('[data-nt="focus-x"]');
       if (el) { NTS.focusGone[pid] = true; refreshNewTabs(); return; }
 
-      el = e.target.closest('[data-nttodo]');
-      if (el) {
-        ntSetDone(el.dataset.nttodo, !el.classList.contains('done'));
-        refreshNewTabs();
-        return;
-      }
-
-      el = e.target.closest('[data-nt="todotab"]');
-      if (el) { NTS.todoOpen = !NTS.todoOpen; refreshNewTabs(); return; }
-
       el = e.target.closest('[data-nt="shuffle"]');
       if (el) { ntShuffle(t); refreshNewTabs(); return; }
 
@@ -1232,20 +1160,6 @@
       if (NTS.tray) { NTS.tray = false; refreshNewTabs(); }
     });
 
-    doc.addEventListener('keydown', function (e) {
-      if (e.key !== 'Enter') return;
-      var inp = e.target.closest('[data-nt="new"]');
-      if (!inp) return;
-      var text = inp.value.trim().slice(0, 120);
-      if (!text) return;
-      var pid = ntPersonaKey();
-      NTS.extra[pid] = NTS.extra[pid] || [];
-      NTS.extra[pid].push({ id: 'x' + (++ntSeq), text: text, done: false });
-      inp.value = '';
-      refreshNewTabs();
-      var next = doc.querySelector('[data-nt="new"]');
-      if (next) next.focus();
-    });
   }
 
   var toastT = null;

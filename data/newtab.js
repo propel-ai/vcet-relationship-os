@@ -2,7 +2,7 @@
    Chrome's default page — a Momentum-style new tab.
 
    Everything on it is seeded here: the photo, the greeting, the one thing that
-   matters today, the todo list, the weather, and the quote rail.
+   matters today, the weather, and the quote rail.
 
    The quotes are verbatim lines from VCET's own material — the three "Start
    Here" podcast recordings and four VCET blog posts in /recordings. Rules they
@@ -36,28 +36,11 @@ window.VCET_DATA.newtab = {
     fallback: { temp: 68, sky: 'cloud' }
   },
 
-  /* ------------------------------------------------- the one thing + todos */
-  /* Per persona. `done: true` renders struck through, as in Momentum. */
+  /* ---------------------------------------------------- the one thing today */
+  /* Per persona. Tick it to strike it through, × to clear it. */
   focus: {
     dave: 'Send Yuki the Derek Foss intro',
     nicole: 'Ship the September newsletter'
-  },
-
-  todos: {
-    dave: [
-      { id: 'd1', text: '7am ride — Bolton Notch', done: true },
-      { id: 'd2', text: 'Read the Monday briefing', done: true },
-      { id: 'd3', text: 'Send Yuki → Derek Foss intro', done: false },
-      { id: 'd4', text: 'Board packet — comms section from Nicole', done: false },
-      { id: 'd5', text: 'Call Elena Marsh back', done: false }
-    ],
-    nicole: [
-      { id: 'n1', text: 'Clear the inbound queue', done: true },
-      { id: 'n2', text: 'Podcast edit review — ep. 120', done: true },
-      { id: 'n3', text: 'Draft the Pulse post on Maple Grid', done: false },
-      { id: 'n4', text: 'Book ep. 121 with Acast', done: false },
-      { id: 'n5', text: 'Newsletter build', done: false }
-    ]
   },
 
   /* ---------------------------------------------------------- the link tray */
