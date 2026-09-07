@@ -63,6 +63,24 @@ API key, nothing secret in this repo. The room id is random and unguessable.
 Skip step 1 and the prototype runs perfectly well on one machine with no
 network at all.
 
+## Deploying
+
+Push to `main`; GitHub Pages serves the repo root.
+
+**Bump the cache token every time you deploy.** Pages sends
+`cache-control: max-age=600` on every file, so without this a returning
+browser can run a mix of old and new code for ten minutes — and someone
+joining a synced session on stale assets breaks the demo. The token lives in
+`index.html` (`?v=N` on every local asset, plus `window.VCET_V`):
+
+```bash
+sed -i '' 's/?v=[0-9]*/?v=NEW/g; s/VCET_V = "[0-9]*"/VCET_V = "NEW"/' index.html
+```
+
+Replace `NEW` with the next integer. If someone reports seeing an old
+version anyway, it is their cached `index.html`: a hard refresh (⌘⇧R) fixes
+it immediately, and it expires on its own within ten minutes.
+
 ## The story
 
 | beat | when | what lands |

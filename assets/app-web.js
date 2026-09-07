@@ -543,7 +543,10 @@
 
     if (p.src) {
       var f = document.createElement('iframe');
-      f.src = p.src;
+      // Same cache-busting token as index.html: the web/*.html pages inside
+      // these iframes are served with max-age=600 like everything else, and a
+      // participant joining a synced session on a stale page breaks the demo.
+      f.src = p.src + (window.VCET_V ? (p.src.indexOf('?') < 0 ? '?' : '&') + 'v=' + window.VCET_V : '');
       f.title = p.title;
       if (p.prefill) f.addEventListener('load', function () { prefill(f, p.prefill); });
       pane.appendChild(f);
