@@ -242,7 +242,7 @@ window.VCET_APPS = window.VCET_APPS || {};
     calendar: { name: 'Calendar', icon: 'calendar' },
     slack: { name: 'Slack', icon: 'slack' },
     web: { name: 'Chrome', icon: 'web' },
-    wisdom: { name: 'Wisdom', icon: 'wisdom' }
+    wisdom: { name: '8 Ball', icon: 'wisdom' }
   };
 
   function notify(n) {
