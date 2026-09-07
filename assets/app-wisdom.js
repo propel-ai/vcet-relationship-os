@@ -23,7 +23,9 @@
   var cardOpen = true;    // the note from us — open on arrival, then behind the cake
   var editing = false;    // triple-click the note to rewrite it
   var cardClicks = 0, cardClickTimer = null;
-  var CARD_KEY = 'vcet8ball:card';
+  // Bumped when the note in data/wisdom.js is rewritten: a local edit of the
+  // PREVIOUS message must not mask the new one.
+  var CARD_KEY = 'vcet8ball:card:2';
   var bag = [];           // shuffled draw pile, so you don't repeat until you must
   var drawn = 0;
   var timers = [];

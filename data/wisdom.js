@@ -34,13 +34,14 @@ window.VCET_DATA.wisdom = {
   /* The note from us, behind the cake in the bottom corner. */
   card: {
     body: [
-      "Happy Birthday Dave! Inspired by the VCET attitude, we made you this " +
-      "8-ball. Just like a classic 8 ball, it's giving entropy a tangible face " +
-      "and letting the universe chime in, all while linking to VCET's bangin' " +
-      "content.",
-      "Thank you for being such a rad partner and friend to Propel. Propel on."
+      "Happy Birthday Dave! Inspired by VCET's specific brand of strong " +
+      "principles meets magic and whimsy, we made you this 8 ball. Just like " +
+      "a classic 8 ball, it's giving entropy a tangible face; but just like " +
+      "VCET, it grounds the un-tameable forces of randomness with stories " +
+      "from the community to spark moments of insight.",
+      "Thank you for being such rad partners in build. Propel on!"
     ],
-    signoff: '- The Propel Team'
+    signoff: 'From the Propel Team'
   },
 
   wisdom: [
