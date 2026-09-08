@@ -121,7 +121,9 @@ window.VCET_APPS = window.VCET_APPS || {};
 
   // ------------------------------------------------------------------- state
   const state = {
-    persona: 'nicole',
+    // Dave is the default: the plain link is the one he opens. A synced
+    // session's #as=nicole still overrides this (sync.js).
+    persona: 'dave',
     beat: 0,
     openApp: null,           // 'mail' | 'calendar' | 'slack' | 'web' | null
     launched: {},            // appId -> true once mounted

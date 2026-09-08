@@ -9,7 +9,9 @@ people the prototype is built for; every other person named is fictional.
 
 ## Running the session
 
-Open the deployed URL. The prototype starts on **Monday 8:00 AM**.
+Open the deployed URL. The prototype starts on **Monday 8:00 AM**, viewing as
+**Dave**. Switch person with the toggle in the menu bar, or hand out the
+per-person links from the controller (those carry `#as=` and override the default).
 
 | | |
 |---|---|
