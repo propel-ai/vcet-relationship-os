@@ -1,7 +1,7 @@
 # VCET Relationship OS — prototype build brief
 
 A fake desktop with four apps (Mail, Calendar, Slack, Chrome) that we drive live in
-front of Nicole Bianchi (Director of Marketing & Comms) to watch her real-time
+front of Nicole Eaton (Director of Marketing & Comms) to watch her real-time
 reactions. **Data is dummy. Every interaction only has to work once.** Optimize for
 looking and feeling real over being robust.
 
@@ -9,7 +9,7 @@ looking and feeling real over being robust.
 
 ## The two people
 
-| | Nicole Bianchi | Dave Bradbury |
+| | Nicole Eaton | Dave Bradbury |
 |---|---|---|
 | id | `nicole` | `dave` |
 | role | Director of Marketing & Communications | President |

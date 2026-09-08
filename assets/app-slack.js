@@ -17,7 +17,7 @@
   /* ------------------------------------------------------------- authors */
   var AUTHORS = {
     sam:    { name: 'Sam',            short: 'Sam',    initials: 'S',  color: '#F37021', app: true },
-    nicole: { name: 'Nicole Bianchi',  short: 'Nicole', initials: 'NB', color: '#C9A227' },
+    nicole: { name: 'Nicole Eaton',  short: 'Nicole', initials: 'NE', color: '#C9A227' },
     dave:   { name: 'Dave Bradbury',   short: 'Dave',   initials: 'DB', color: '#2E7D5B' },
     ema:    { name: 'Ema Voss',        short: 'Ema',    initials: 'EV', color: '#4A72B8' },
     javen:  { name: 'Javen Reyes',     short: 'Javen',  initials: 'JR', color: '#B0524E' }

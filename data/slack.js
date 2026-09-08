@@ -142,7 +142,7 @@ window.VCET_DATA.slack = {
       text: 'Are you in the Maple Grid check-in tomorrow? Yuki asked for you by name.' },
 
     { id: 'x0b', channel: 'dm-peer', beat: 'mon-8am', quiet: true,
-      author: 'Nicole Bianchi', authorId: 'nicole', day: 'Mon', time: '4:09 PM',
+      author: 'Nicole Eaton', authorId: 'nicole', day: 'Mon', time: '4:09 PM',
       text: 'Yes — 10:00. I want their launch timing for the October newsletter anyway.' },
 
     { id: 'e0a', channel: 'dm-ema', beat: 'mon-8am', quiet: true,

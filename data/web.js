@@ -354,7 +354,7 @@ window.VCET_DATA.web = {
       notes: {
         items: [
           { title: 'Advising call — 40 min', meta: '19 Aug 2026 · by D. Bradbury', body: 'Term-sheet chatter from two funds, nothing signed. Committed to intro Derek Foss (Catamount). Yuki generous with utility-market intel as usual.' },
-          { title: 'Pilot scoping', meta: '30 Jul 2026 · by N. Bianchi', body: 'Load-shift numbers exist but are not cleared for publication. Asked for two figures for the Pulse post.' }
+          { title: 'Pilot scoping', meta: '30 Jul 2026 · by N. Eaton', body: 'Load-shift numbers exist but are not cleared for publication. Asked for two figures for the Pulse post.' }
         ],
         foot: '2 of 9 notes synced from HubSpot · authored by Dave and the team'
       },

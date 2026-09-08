@@ -4,7 +4,8 @@ A fake desktop built to test Nicole's and Dave's real-time reactions to "Sam", t
 relationship intelligence assistant. Four apps — **Mail, Calendar, Slack, Chrome** — and a
 scripted two-day story that a facilitator advances from a hidden control panel.
 
-**All data is synthetic. Every person named is fictional.**
+**All data is synthetic.** Nicole Eaton and Dave Bradbury are the two real VCET
+people the prototype is built for; every other person named is fictional.
 
 ## Running the session
 

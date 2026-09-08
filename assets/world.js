@@ -24,11 +24,11 @@ window.VCET_APPS = window.VCET_APPS || {};
   const PERSONAS = {
     nicole: {
       id: 'nicole',
-      name: 'Nicole Bianchi',
+      name: 'Nicole Eaton',
       first: 'Nicole',
       role: 'Director of Marketing & Communications',
       email: 'nicole@vcet.co',
-      initials: 'NB',
+      initials: 'NE',
       color: '#C9A227',
       slackHandle: 'nicole'
     },

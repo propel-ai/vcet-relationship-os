@@ -914,7 +914,7 @@
       timelineNote: '5 of ' + c.touches + ' events · one timeline, five systems',
       timeline: tl,
       notes: {
-        items: [{ title: 'Relationship note', meta: weeksAgo(c.lastW) + ' · by ' + (owner === 'Dave' ? 'D. Bradbury' : 'N. Bianchi'), body: c.note }],
+        items: [{ title: 'Relationship note', meta: weeksAgo(c.lastW) + ' · by ' + (owner === 'Dave' ? 'D. Bradbury' : 'N. Eaton'), body: c.note }],
         foot: '1 note synced from HubSpot · met via ' + c.via
       },
       threads: {

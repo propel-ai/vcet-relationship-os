@@ -43,7 +43,7 @@ window.VCET_DATA.calendar = {
   people: [
     { id: 'ema',    first: 'Ema',    name: 'Ema Voss',       role: 'Principal',                            color: '#4A72B8', tint: '#E6EDF9', edge: '#3A5C99' },
     { id: 'dave',   first: 'Dave',   name: 'Dave Bradbury',  role: 'President',                            color: '#2E7D5B', tint: '#E4F2EA', edge: '#24634880' },
-    { id: 'nicole', first: 'Nicole', name: 'Nicole Bianchi', role: 'Director of Marketing & Comms',        color: '#C9A227', tint: '#FBF3D6', edge: '#A2801C' },
+    { id: 'nicole', first: 'Nicole', name: 'Nicole Eaton', role: 'Director of Marketing & Comms',        color: '#C9A227', tint: '#FBF3D6', edge: '#A2801C' },
     { id: 'javen',  first: 'Javen',  name: 'Javen Reyes',    role: 'Analyst',                              color: '#B0524E', tint: '#F9E6E4', edge: '#8E403D' }
   ],
 
@@ -58,7 +58,7 @@ window.VCET_DATA.calendar = {
     { id: 'm2', owner: 'nicole', d: 1, s: 9, e: 10.5, ext: true,
       who: 'Ben Ostrander', org: 'Granite Peak Robotics',
       title: 'Podcast recording — Ben Ostrander',
-      att: ['Nicole Bianchi', 'Ben Ostrander'], meet: 'vtp-podc-ast' },
+      att: ['Nicole Eaton', 'Ben Ostrander'], meet: 'vtp-podc-ast' },
 
     { id: 'm3', owner: 'dave', d: 1, s: 9.5, e: 11, ext: true,
       who: 'Kofi Asante', org: 'Otter Creek Analytics',
@@ -76,7 +76,7 @@ window.VCET_DATA.calendar = {
 
     { id: 'm6', owner: 'nicole', d: 1, s: 14, e: 15.5, ext: false,
       title: 'Marketing metrics review — August',
-      att: ['Nicole Bianchi', 'Javen Reyes'], meet: 'nb-mktg-rev' },
+      att: ['Nicole Eaton', 'Javen Reyes'], meet: 'ne-mktg-rev' },
 
     /* ============================ TUESDAY 25 =========================== */
     { id: 't1', owner: 'ema', d: 2, s: 9, e: 10, ext: false,
@@ -91,12 +91,12 @@ window.VCET_DATA.calendar = {
     { id: 'yuki', owner: 'dave', also: ['nicole'], d: 2, s: 10, e: 11, ext: true, key: true,
       who: 'Yuki Tanaka', org: 'Maple Grid Energy',
       title: 'Yuki Tanaka · Maple Grid Energy check-in',
-      att: ['Dave Bradbury', 'Nicole Bianchi', 'Yuki Tanaka'], meet: 'mgd-yuki-101',
+      att: ['Dave Bradbury', 'Nicole Eaton', 'Yuki Tanaka'], meet: 'mgd-yuki-101',
       loc: 'Google Meet · VCET conf room B' },
 
     { id: 't3', owner: 'nicole', d: 2, s: 11, e: 12.25, ext: false,
       title: 'LP newsletter block — August issue',
-      att: ['Nicole Bianchi'], meet: 'nb-lpnews-8' },
+      att: ['Nicole Eaton'], meet: 'ne-lpnews-8' },
 
     { id: 't4', owner: 'dave', d: 2, s: 11.25, e: 12.5, ext: true,
       who: 'Nate Brooks', org: 'Long Trail Provisions',
@@ -107,12 +107,12 @@ window.VCET_DATA.calendar = {
     { id: 't-dl', owner: 'dave', also: ['nicole'], d: 2, s: 11.08, e: 11.42, ext: false,
       beat: 'tue-12pm',
       title: 'Post-meeting download — Maple Grid',
-      att: ['Dave Bradbury', 'Nicole Bianchi'], meet: 'sam-dwnld-1' },
+      att: ['Dave Bradbury', 'Nicole Eaton'], meet: 'sam-dwnld-1' },
 
     { id: 't-wm', owner: 'nicole', also: ['dave'], d: 2, s: 12.5, e: 13, ext: false,
       beat: 'tue-1230pm',
       title: 'Warm match review — supply chain intros',
-      att: ['Nicole Bianchi', 'Dave Bradbury'], meet: 'sam-warm-22' },
+      att: ['Nicole Eaton', 'Dave Bradbury'], meet: 'sam-warm-22' },
 
     { id: 't5', owner: 'ema', d: 2, s: 14, e: 15.5, ext: true,
       who: 'Marcus Vale', org: 'Beacon Harbor Ventures',
@@ -126,7 +126,7 @@ window.VCET_DATA.calendar = {
     { id: 't7', owner: 'nicole', d: 2, s: 14, e: 15.5, ext: true,
       who: 'Sana Iqbal', org: 'Independent',
       title: 'Mentor session — Sana Iqbal',
-      att: ['Nicole Bianchi', 'Sana Iqbal'], meet: 'nb-mntr-sq1' },
+      att: ['Nicole Eaton', 'Sana Iqbal'], meet: 'ne-mntr-sq1' },
 
     { id: 't8', owner: 'javen', d: 2, s: 14.75, e: 16, ext: false,
       title: 'Ecosystem report — draft v1',
@@ -135,7 +135,7 @@ window.VCET_DATA.calendar = {
     /* =========================== WEDNESDAY 26 ========================== */
     { id: 'w1', owner: 'nicole', d: 3, s: 9, e: 10.5, ext: false,
       title: 'Podcast S3 — interview prep',
-      att: ['Nicole Bianchi'], meet: 'nb-pod-prep' },
+      att: ['Nicole Eaton'], meet: 'ne-pod-prep' },
 
     { id: 'w2', owner: 'javen', d: 3, s: 9, e: 10, ext: false,
       title: 'Portfolio metrics sync',
@@ -159,7 +159,7 @@ window.VCET_DATA.calendar = {
     { id: 'derek', owner: 'nicole', d: 3, s: 13.5, e: 14.5, ext: true, key: true,
       who: 'Derek Foss', org: 'Catamount Capital',
       title: 'Derek Foss intro call',
-      att: ['Nicole Bianchi', 'Derek Foss'], meet: 'cc-derek-19',
+      att: ['Nicole Eaton', 'Derek Foss'], meet: 'cc-derek-19',
       loc: 'Google Meet' },
 
     { id: 'w6', owner: 'javen', d: 3, s: 13.75, e: 15, ext: false,
@@ -169,7 +169,7 @@ window.VCET_DATA.calendar = {
     { id: 'w7', owner: 'nicole', d: 3, s: 15, e: 16, ext: true,
       who: 'Beatriz Molina', org: 'Otter Creek Analytics',
       title: 'Mentor session — Beatriz Molina',
-      att: ['Nicole Bianchi', 'Beatriz Molina'], meet: 'nb-mntr-bm1' },
+      att: ['Nicole Eaton', 'Beatriz Molina'], meet: 'ne-mntr-bm1' },
 
     /* =========================== THURSDAY 27 =========================== */
     { id: 'h1', owner: 'ema', d: 4, s: 9, e: 12, ext: false,
@@ -178,7 +178,7 @@ window.VCET_DATA.calendar = {
 
     { id: 'h2', owner: 'nicole', d: 4, s: 9, e: 11, ext: false,
       title: 'Podcast edit review — episode 41',
-      att: ['Nicole Bianchi'], meet: 'nb-edit-41' },
+      att: ['Nicole Eaton'], meet: 'ne-edit-41' },
 
     { id: 'h3', owner: 'dave', d: 4, s: 9, e: 10.5, ext: true,
       who: 'Nadia Petrov', org: 'Shelburne Farmstead Tech',
@@ -205,13 +205,13 @@ window.VCET_DATA.calendar = {
     { id: 'h8', owner: 'nicole', d: 4, s: 14.5, e: 15.5, ext: true,
       who: 'Alicia Trombley', org: 'Green Mountain Angels',
       title: 'LP newsletter — Alicia Trombley review',
-      att: ['Nicole Bianchi', 'Alicia Trombley'], meet: 'nb-lp-atrev' },
+      att: ['Nicole Eaton', 'Alicia Trombley'], meet: 'ne-lp-atrev' },
 
     /* ============================ FRIDAY 28 ============================ */
     { id: 'f1', owner: 'nicole', d: 5, s: 9, e: 11, ext: true,
       who: 'Renee Paquette', org: 'BTV Talent Collective',
       title: 'Mentor session — Renee Paquette',
-      att: ['Nicole Bianchi', 'Renee Paquette'], meet: 'nb-mntr-rp1' },
+      att: ['Nicole Eaton', 'Renee Paquette'], meet: 'ne-mntr-rp1' },
 
     { id: 'f2', owner: 'ema', d: 5, s: 9, e: 10.5, ext: false,
       title: 'DD wrap — Otter Creek Analytics',
@@ -227,7 +227,7 @@ window.VCET_DATA.calendar = {
 
     { id: 'f5', owner: 'nicole', d: 5, s: 11.75, e: 13, ext: false,
       title: 'LinkedIn + newsletter metrics',
-      att: ['Nicole Bianchi'], meet: 'nb-li-metrx' },
+      att: ['Nicole Eaton'], meet: 'ne-li-metrx' },
 
     { id: 'f6', owner: 'ema', d: 5, s: 14, e: 16, ext: false,
       title: 'Deal memo — Maple Grid Energy',
@@ -241,7 +241,7 @@ window.VCET_DATA.calendar = {
     { id: 'f8', owner: 'nicole', d: 5, s: 14.5, e: 16, ext: true,
       who: 'Lucia Ferreira', org: 'Shelburne Farmstead Tech',
       title: 'Mentor session — Lucia Ferreira',
-      att: ['Nicole Bianchi', 'Lucia Ferreira'], meet: 'nb-mntr-lf1' },
+      att: ['Nicole Eaton', 'Lucia Ferreira'], meet: 'ne-mntr-lf1' },
 
     { id: 'f9', owner: 'javen', d: 5, s: 15, e: 16, ext: false,
       title: 'CRM hygiene + weekly filing',

@@ -281,7 +281,7 @@
             reader('Dana Whitfield', 'Mentor roster', true) +
             reader('Ema Voss', 'VCET', true) +
             reader('Javen Reyes', 'VCET', true) +
-            reader('Nicole Bianchi', 'VCET', true) +
+            reader('Nicole Eaton', 'VCET', true) +
             reader('Pete Doyle', 'Barre Granite Works', false) +
             reader('Colette Marchand', 'VT Trade Office', false) +
           '</div>' +
@@ -449,7 +449,7 @@
     tag: { t: 'Needs review', tone: 'orange' },
     route: { label: 'Open thread', toast: 'Opened — flagged for your reply' },
     why: 'Woodstock, VT · in zone, but this is a sponsorship offer not an inbound founder · Josephine Marsh referred, she is expecting an answer.',
-    body: p('Ms. Bianchi,',
+    body: p('Ms. Eaton,',
       'Josephine Marsh passed along your note about the alumni event. I am retired from the buying side but still consult for two co-ops in the valley.',
       'I would consider a small sponsorship — call it $2,500 — if there is a way for me to be useful to a founder or two on the day rather than just a logo.',
       'Arthur Pemberton')
@@ -681,11 +681,11 @@
     id: 'd-derek', beat: 'mon-8am', personas: ['dave'], ts: 2320,
     day: 'Fri', clock: '3:05 PM', date: 'Aug 21', tab: 'primary',
     from: who('Derek Foss', 'dfoss@catamountcap.com', '#39424D'), to: 'me', unread: false,
-    subject: 'Coffee — and who is Nicole Bianchi?',
+    subject: 'Coffee — and who is Nicole Eaton?',
     snippet: 'She has me on the calendar Wednesday and I like to know whose room I am walking into.',
     body: p('Dave,',
       'Quarterly coffee is overdue — September works better than August for me.',
-      'Also: Nicole Bianchi has me on the calendar Wednesday 1:30. I like to know whose room I am walking into. Give me one line.',
+      'Also: Nicole Eaton has me on the calendar Wednesday 1:30. I like to know whose room I am walking into. Give me one line.',
       'Derek')
   });
 
